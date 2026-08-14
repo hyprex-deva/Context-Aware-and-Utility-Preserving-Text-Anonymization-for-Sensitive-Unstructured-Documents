@@ -258,23 +258,26 @@ Rules:
     def _init_hf_pipeline(self) -> None:
         """Initialize Hugging Face text generation pipeline for SLM reasoning."""
         try:
+            import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
             logger.info(f"Loading HF SLM pipeline for generalization: {self.hf_model_name}...")
             tokenizer = AutoTokenizer.from_pretrained(self.hf_model_name)
+            
+            # Safe device allocation (default CPU for lightweight stability)
             model = AutoModelForCausalLM.from_pretrained(
                 self.hf_model_name,
-                device_map="auto" if self.device != -1 else "cpu",
-                torch_dtype="auto",
+                torch_dtype=torch.float32,
+                low_cpu_mem_usage=True,
             )
             self._hf_pipeline = pipeline(
                 "text-generation",
                 model=model,
                 tokenizer=tokenizer,
                 max_new_tokens=512,
-                temperature=0.2,
+                temperature=0.1,
                 do_sample=False,
             )
-            logger.info("HF SLM Pipeline loaded successfully.")
+            logger.info(f"HF SLM Pipeline '{self.hf_model_name}' loaded successfully.")
         except Exception as exc:
             logger.warning(f"Could not load HF model '{self.hf_model_name}' ({exc}). Falling back to heuristic mode.")
             self.backend = "heuristic"
@@ -350,7 +353,9 @@ Rules:
             if res.status_code == 200:
                 data = res.json()
                 raw_response = data.get("response", "{}")
-                parsed = json.loads(raw_response)
+                # Strip markdown fences if present
+                clean_json = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw_response.strip(), flags=re.MULTILINE)
+                parsed = json.loads(clean_json)
                 gen_text = parsed.get("generalized_text", text)
                 mods = parsed.get("modifications", [])
                 return gen_text, mods
@@ -372,16 +377,22 @@ Rules:
         ]
         try:
             outputs = self._hf_pipeline(messages)
-            generated_content = outputs[0]["generated_text"][-1]["content"]
-            # Extract JSON from output
-            match = re.search(r"\{.*\}", generated_content, re.DOTALL)
+            last_msg = outputs[0]["generated_text"][-1]
+            generated_content = last_msg.get("content", "") if isinstance(last_msg, dict) else str(last_msg)
+            
+            # Clean markdown code blocks
+            clean_str = re.sub(r"```(?:json)?\s*", "", generated_content).replace("```", "").strip()
+            match = re.search(r"\{.*\}", clean_str, re.DOTALL)
             if match:
                 parsed = json.loads(match.group())
-                return parsed.get("generalized_text", text), parsed.get("modifications", [])
+                gen_text = parsed.get("generalized_text", text)
+                mods = parsed.get("modifications", [])
+                return gen_text, mods
         except Exception as exc:
             logger.warning(f"HF SLM inference failed ({exc}). Falling back to heuristic reasoning.")
 
         return self._generalize_heuristic(text)
+
 
     def generalize_text(
         self, stage1_text: str, original_text: Optional[str] = None

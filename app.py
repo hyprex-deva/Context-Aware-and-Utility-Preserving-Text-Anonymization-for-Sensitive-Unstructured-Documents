@@ -135,11 +135,15 @@ def get_stage1_anonymizer() -> DirectPIIAnonymizer:
 
 
 @st.cache_resource
-def get_stage2_defense(backend: str, threshold: float) -> SemanticQuasiIdentifierDefense:
+def get_stage2_defense(
+    backend: str, threshold: float, hf_model_name: str = "Qwen/Qwen2.5-0.5B-Instruct"
+) -> SemanticQuasiIdentifierDefense:
     return SemanticQuasiIdentifierDefense(
         backend=backend,
         similarity_threshold=threshold,
+        hf_model_name=hf_model_name,
     )
+
 
 
 @st.cache_resource
@@ -244,10 +248,24 @@ def main():
         st.subheader("Stage 2 Reasoning Engine")
         slm_backend = st.selectbox(
             "SLM Backend",
-            ["heuristic", "ollama", "hf_pipeline"],
+            ["hf_pipeline", "heuristic", "ollama"],
             index=0,
             help="Select SLM inference engine for quasi-identifier generalization.",
         )
+
+        hf_model_choice = "Qwen/Qwen2.5-0.5B-Instruct"
+        if slm_backend == "hf_pipeline":
+            hf_model_choice = st.selectbox(
+                "🤗 Hugging Face SLM Model",
+                [
+                    "Qwen/Qwen2.5-0.5B-Instruct",
+                    "Qwen/Qwen2.5-1.5B-Instruct",
+                    "meta-llama/Llama-3.2-1B-Instruct",
+                    "google/gemma-2-2b-it",
+                ],
+                index=0,
+                help="Select instruction-tuned SLM model from Hugging Face.",
+            )
         
         sim_threshold = st.slider(
             "Semantic Drift Threshold (Cosine Sim)",
@@ -290,9 +308,14 @@ def main():
         # Load pipelines
         with st.spinner("Processing through Two-Stage Anonymization Architecture..."):
             stage1_engine = get_stage1_anonymizer()
-            stage2_engine = get_stage2_defense(backend=slm_backend, threshold=sim_threshold)
+            stage2_engine = get_stage2_defense(
+                backend=slm_backend,
+                threshold=sim_threshold,
+                hf_model_name=hf_model_choice,
+            )
             presidio_engine = get_presidio_baseline()
             redacted_engine = get_redacted_baseline()
+
 
             # Execute Stage 1
             s1_result = stage1_engine.anonymize(input_text)
