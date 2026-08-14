@@ -84,7 +84,7 @@ class DirectPIIAnonymizer:
             r"\b(?:\d{4}[-\s]?){3}\d{4}\b|\b\d{15,16}\b"
         ),
         "LICENSE": re.compile(
-            r"(?i)(?:License|Driver(?:\'s)?\s*License|Driving\s*License)\s*[:#\-]?\s*([A-Za-z0-9\.\-]{6,30})"
+            r"(?i)(?:License|Driver(?:'s)?\s*License|Driving\s*License)\s*[:#\-]?\s*([A-Za-z0-9.\-\s]{6,30})"
         ),
         "ID_CARD": re.compile(
             r"(?i)(?:ID\s*Card(?:\s*Number)?|National\s*ID|ID\s*Doc(?:ument)?|ID\s*Card)\s*[:#\-]?\s*([A-Za-z0-9]{5,20})"
