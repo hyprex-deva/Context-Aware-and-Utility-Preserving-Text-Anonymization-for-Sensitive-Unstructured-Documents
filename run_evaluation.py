@@ -38,43 +38,37 @@ logger = logging.getLogger("RunEvaluation")
 
 def load_benchmark_data(data_path: str, max_samples: int = 10) -> List[Dict[str, Any]]:
     """Load benchmark dataset from local JSON or Hugging Face dataset fallback."""
-    if os.path.exists(data_path):
-        logger.info(f"Loading local benchmark samples from: {data_path}")
-        with open(data_path, "r", encoding="utf-8") as f:
-            samples = json.load(f)
-        return samples[:max_samples]
-    
-    logger.info(f"Local file {data_path} not found. Attempting to load Hugging Face dataset...")
+    if data_path and os.path.exists(data_path):
+        try:
+            with open(data_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                logger.info(f"Loaded {len(data[:max_samples])} benchmark samples from '{data_path}' (ai4privacy/pii-masking-300k).")
+                return data[:max_samples]
+        except Exception as exc:
+            logger.error(f"Error loading benchmark dataset from {data_path}: {exc}")
+
     try:
         from datasets import load_dataset
+        logger.info("Streaming benchmark samples from Hugging Face: 'ai4privacy/pii-masking-300k'...")
         ds = load_dataset("ai4privacy/pii-masking-300k", split="train", streaming=True)
         samples = []
         for i, item in enumerate(ds):
-            if i >= max_samples:
+            if len(samples) >= max_samples:
                 break
-            samples.append({
-                "id": f"hf_sample_{i}",
-                "domain": "General Web",
-                "text": item.get("unmasked_text", item.get("text", "")),
-                "direct_pii": [],
-                "quasi_identifiers": [],
-            })
+            if item.get("language") == "English":
+                masks = item.get("privacy_mask", [])
+                direct_pii = [{"entity": m["value"], "type": m["label"], "start": m["start"], "end": m["end"]} for m in masks]
+                samples.append({
+                    "id": f"ai4privacy_{item.get('id', i)}",
+                    "domain": "ai4privacy",
+                    "text": item.get("source_text", ""),
+                    "direct_pii": direct_pii,
+                    "target_text": item.get("target_text", ""),
+                })
         return samples
     except Exception as exc:
-        logger.warning(f"Could not load Hugging Face dataset ({exc}). Generating default dummy test samples.")
-        return [
-            {
-                "id": "dummy_01",
-                "domain": "Clinical",
-                "text": "Dr. Sarah Connor treated patient John Doe at General Hospital on 2023-01-10.",
-                "direct_pii": [
-                    {"entity": "Sarah Connor", "type": "PER", "start": 4, "end": 16},
-                    {"entity": "John Doe", "type": "PER", "start": 33, "end": 41},
-                    {"entity": "General Hospital", "type": "ORG", "start": 45, "end": 61},
-                ],
-                "quasi_identifiers": ["treated patient on 2023-01-10"]
-            }
-        ]
+        logger.warning(f"Could not stream Hugging Face dataset ({exc}).")
+        return []
 
 
 def run_benchmark(

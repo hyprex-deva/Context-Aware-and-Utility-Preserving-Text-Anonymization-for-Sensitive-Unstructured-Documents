@@ -1,195 +1,568 @@
 [
   {
-    "id": "sample_01_healthcare",
-    "domain": "Healthcare",
-    "text": "Patient Eleanor Vance (DOB: 12/04/1982, SSN: 482-19-8921) visited Dr. Robert Langdon at Johns Hopkins Hospital on August 14, 2023. She can be reached at eleanor.vance@medmail.org or (410) 555-0199. Eleanor works as the sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors in Baltimore, Maryland. She lives at 742 Evergreen Terrace.",
+    "id": "HF-40768A",
+    "domain": "Document (DATE + EMAIL + LASTNAME1)",
+    "text": "Subject: Admission Notification - Great Britain University\\n\\nDear Applicants,\\n\\nWe are thrilled to inform you about the status of your admission to Great Britain University. Please read the details below for the automated notification.\\n\\nDate of Notification: 5:24am on August 5th, 2057\\n\\n**Applicant Details**\\n\\n1. Applicant: Balloi Eckrich\\n   Email: bballoi@yahoo.com\\n   Social Number: 996 076 6460\\n   ID",
     "direct_pii": [
-      {"entity": "Eleanor Vance", "type": "PER", "start": 8, "end": 21},
-      {"entity": "482-19-8921", "type": "SSN", "start": 44, "end": 55},
-      {"entity": "Robert Langdon", "type": "PER", "start": 68, "end": 82},
-      {"entity": "Johns Hopkins Hospital", "type": "ORG", "start": 86, "end": 108},
-      {"entity": "eleanor.vance@medmail.org", "type": "EMAIL", "start": 154, "end": 179},
-      {"entity": "(410) 555-0199", "type": "PHONE", "start": 183, "end": 197},
-      {"entity": "Baltimore", "type": "LOC", "start": 296, "end": 305},
-      {"entity": "Maryland", "type": "LOC", "start": 307, "end": 315},
-      {"entity": "742 Evergreen Terrace", "type": "LOC", "start": 330, "end": 351}
+      {
+        "entity": "5:24am",
+        "type": "TIME",
+        "start": 263,
+        "end": 269
+      },
+      {
+        "entity": "August 5th, 2057",
+        "type": "DATE",
+        "start": 273,
+        "end": 289
+      },
+      {
+        "entity": "Balloi",
+        "type": "LASTNAME1",
+        "start": 332,
+        "end": 338
+      },
+      {
+        "entity": "Eckrich",
+        "type": "LASTNAME2",
+        "start": 339,
+        "end": 346
+      },
+      {
+        "entity": "bballoi@yahoo.com",
+        "type": "EMAIL",
+        "start": 358,
+        "end": 375
+      },
+      {
+        "entity": "996 076 6460",
+        "type": "SOCIALNUMBER",
+        "start": 395,
+        "end": 407
+      }
     ],
-    "quasi_identifiers": [
-      "sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors in Baltimore, Maryland",
-      "DOB: 12/04/1982",
-      "August 14, 2023"
-    ]
+    "target_text": "Subject: Admission Notification - Great Britain University\\n\\nDear Applicants,\\n\\nWe are thrilled to inform you about the status of your admission to Great Britain University. Please read the details below for the automated notification.\\n\\nDate of Notification: [TIME] on [DATE]\\n\\n**Applicant Details**\\n\\n1. Applicant: [LASTNAME1] [LASTNAME2]\\n   Email: [EMAIL]\\n   Social Number: [SOCIALNUMBER]\\n   ID "
   },
   {
-    "id": "sample_02_finance",
-    "domain": "Finance & Banking",
-    "text": "Account holder Marcus Aurelius transferred $45,000 to Apex Global Ventures on 2024-03-15 from IP address 192.168.1.105. Marcus confirmed the wire instruction with Senior Wealth Manager Sarah Jenkins at Goldman Sachs in New York City via sarah.jenkins@goldmansachs.com. His credit card 4532-8901-2345-6789 was charged a $25 processing fee.",
+    "id": "HF-40768B",
+    "domain": "Document (BUILDING + CITY + COUNTRY)",
+    "text": "Card: KB90324ER\\n   Country: GB\\n   Building: 163\\n   Street: Conygre Grove\\n   City: Bristol\\n   State: ENG\\n   Postcode: BS34 7HU, BS34 7HZ\\n   Password: q4R\\\n\\n2. Applicant: Baasgaran Palmoso\\n   Email: blerenbaasgara@gmail.com\\n   Social Number: 107-393-9036\\n   ID Card: SC78428CU\\n   Country: United Kingdom\\n   Building: 646\\n   Street: School Lane\\n   City: Altrincham\\n   State: ENG\\n   Postcode: WA14 5R",
     "direct_pii": [
-      {"entity": "Marcus Aurelius", "type": "PER", "start": 15, "end": 30},
-      {"entity": "Apex Global Ventures", "type": "ORG", "start": 46, "end": 66},
-      {"entity": "192.168.1.105", "type": "IP_ADDRESS", "start": 105, "end": 118},
-      {"entity": "Sarah Jenkins", "type": "PER", "start": 186, "end": 199},
-      {"entity": "Goldman Sachs", "type": "ORG", "start": 203, "end": 216},
-      {"entity": "New York City", "type": "LOC", "start": 220, "end": 233},
-      {"entity": "sarah.jenkins@goldmansachs.com", "type": "EMAIL", "start": 238, "end": 268},
-      {"entity": "4532-8901-2345-6789", "type": "CREDIT_CARD", "start": 287, "end": 306}
+      {
+        "entity": "KB90324ER",
+        "type": "IDCARD",
+        "start": 6,
+        "end": 15
+      },
+      {
+        "entity": "GB",
+        "type": "COUNTRY",
+        "start": 29,
+        "end": 31
+      },
+      {
+        "entity": "163",
+        "type": "BUILDING",
+        "start": 46,
+        "end": 49
+      },
+      {
+        "entity": "Conygre Grove",
+        "type": "STREET",
+        "start": 62,
+        "end": 75
+      },
+      {
+        "entity": "Bristol",
+        "type": "CITY",
+        "start": 86,
+        "end": 93
+      },
+      {
+        "entity": "ENG",
+        "type": "STATE",
+        "start": 105,
+        "end": 108
+      },
+      {
+        "entity": "BS34 7HU, BS34 7HZ",
+        "type": "POSTCODE",
+        "start": 123,
+        "end": 141
+      },
+      {
+        "entity": "q4R\\\\",
+        "type": "PASS",
+        "start": 156,
+        "end": 161
+      },
+      {
+        "entity": "Baasgaran",
+        "type": "LASTNAME1",
+        "start": 179,
+        "end": 188
+      },
+      {
+        "entity": "Palmoso",
+        "type": "LASTNAME2",
+        "start": 189,
+        "end": 196
+      },
+      {
+        "entity": "blerenbaasgara@gmail.com",
+        "type": "EMAIL",
+        "start": 208,
+        "end": 232
+      },
+      {
+        "entity": "107-393-9036",
+        "type": "SOCIALNUMBER",
+        "start": 252,
+        "end": 264
+      },
+      {
+        "entity": "SC78428CU",
+        "type": "IDCARD",
+        "start": 278,
+        "end": 287
+      },
+      {
+        "entity": "United Kingdom",
+        "type": "COUNTRY",
+        "start": 301,
+        "end": 315
+      },
+      {
+        "entity": "646",
+        "type": "BUILDING",
+        "start": 330,
+        "end": 333
+      },
+      {
+        "entity": "School Lane",
+        "type": "STREET",
+        "start": 346,
+        "end": 357
+      },
+      {
+        "entity": "Altrincham",
+        "type": "CITY",
+        "start": 368,
+        "end": 378
+      },
+      {
+        "entity": "ENG",
+        "type": "STATE",
+        "start": 390,
+        "end": 393
+      }
     ],
-    "quasi_identifiers": [
-      "transferred $45,000",
-      "Senior Wealth Manager at Goldman Sachs in New York City",
-      "on 2024-03-15"
-    ]
+    "target_text": "Card: [IDCARD]\\n   Country: [COUNTRY]\\n   Building: [BUILDING]\\n   Street: [STREET]\\n   City: [CITY]\\n   State: [STATE]\\n   Postcode: [POSTCODE]\\n   Password: [PASS]\\n\\n2. Applicant: [LASTNAME1] [LASTNAME2]\\n   Email: [EMAIL]\\n   Social Number: [SOCIALNUMBER]\\n   ID Card: [IDCARD]\\n   Country: [COUNTRY]\\n   Building: [BUILDING]\\n   Street: [STREET]\\n   City: [CITY]\\n   State: [STATE]\\n   Postcode: WA14 5R"
   },
   {
-    "id": "sample_03_whistleblower_hr",
-    "domain": "HR & Whistleblower",
-    "text": "An internal complaint was filed by David K. Miller, Lead Quantum Computing Architect at Nebula Tech in Seattle, Washington. David reported unethical contracting to VP of HR Linda Sterling (linda.sterling@nebulatech.io, +1-206-555-0143). David is the only employee in the 50-person startup holding 4 patents in topological quantum gates.",
+    "id": "HF-40769B",
+    "domain": "Document (DRIVERLICENSE + EMAIL + PASSPORT)",
+    "text": "981\n- Social Security Number: 554.575.9355\n- Email: vtpkbqcutaxb799@yahoo.com\n- Telephone: +1322380 4181\n\nApplicant B:\n- Passport: 933932951\n- Driver's License: LOUMA.657200.9.504\n- Social Security Number: 0610780437\n- Email: xwjhgbgg009@outlook.com\n- Telephone: +543 51-082.8035\n\n...and so forth for the remaining applicants.\n\nPlease review the attachment",
     "direct_pii": [
-      {"entity": "David K. Miller", "type": "PER", "start": 35, "end": 50},
-      {"entity": "Nebula Tech", "type": "ORG", "start": 88, "end": 99},
-      {"entity": "Seattle", "type": "LOC", "start": 103, "end": 110},
-      {"entity": "Washington", "type": "LOC", "start": 112, "end": 122},
-      {"entity": "Linda Sterling", "type": "PER", "start": 172, "end": 186},
-      {"entity": "linda.sterling@nebulatech.io", "type": "EMAIL", "start": 188, "end": 216},
-      {"entity": "+1-206-555-0143", "type": "PHONE", "start": 218, "end": 233}
+      {
+        "entity": "554.575.9355",
+        "type": "SOCIALNUMBER",
+        "start": 30,
+        "end": 42
+      },
+      {
+        "entity": "vtpkbqcutaxb799@yahoo.com",
+        "type": "EMAIL",
+        "start": 52,
+        "end": 77
+      },
+      {
+        "entity": "+1322380 4181",
+        "type": "TEL",
+        "start": 91,
+        "end": 104
+      },
+      {
+        "entity": "933932951",
+        "type": "PASSPORT",
+        "start": 131,
+        "end": 140
+      },
+      {
+        "entity": "LOUMA.657200.9.504",
+        "type": "DRIVERLICENSE",
+        "start": 161,
+        "end": 179
+      },
+      {
+        "entity": "0610780437",
+        "type": "SOCIALNUMBER",
+        "start": 206,
+        "end": 216
+      },
+      {
+        "entity": "xwjhgbgg009@outlook.com",
+        "type": "EMAIL",
+        "start": 226,
+        "end": 249
+      },
+      {
+        "entity": "+543 51-082.8035",
+        "type": "TEL",
+        "start": 263,
+        "end": 279
+      }
     ],
-    "quasi_identifiers": [
-      "Lead Quantum Computing Architect at Nebula Tech in Seattle, Washington",
-      "only employee in the 50-person startup holding 4 patents in topological quantum gates"
-    ]
+    "target_text": "981\n- Social Security Number: [SOCIALNUMBER]\n- Email: [EMAIL]\n- Telephone: [TEL]\n\nApplicant B:\n- Passport: [PASSPORT]\n- Driver's License: [DRIVERLICENSE]\n- Social Security Number: [SOCIALNUMBER]\n- Email: [EMAIL]\n- Telephone: [TEL]\n\n...and so forth for the remaining applicants.\n\nPlease review the attachment"
   },
   {
-    "id": "sample_04_legal",
-    "domain": "Legal & Dispute",
-    "text": "In the matter of Harrison vs. Sterling Logistics Corp, Attorney Samantha Reed (Bar ID: NY-98421) submitted deposition records on behalf of former CFO Bradley Cooper. Inquiries should be sent to samantha.reed@reedlegal.com or 212-555-9876. The dispute involves an unannounced executive termination in Zurich, Switzerland on May 12, 2022.",
+    "id": "HF-40769C",
+    "domain": "Document (DATE + STREET + TIME)",
+    "text": "s carefully and inform us immediately if there are any discrepancies or if you require further assistance. \n\nWe appreciate your cooperation in this process and look forward to reviewing your applications.\n\nWarm regards,\n\nAdmissions Office \n[University Name]  \n[University Address]  \n[City, State, Postcode]   \n[Country, Rue des \u00c9coles]  \n13, September/54",
     "direct_pii": [
-      {"entity": "Harrison", "type": "PER", "start": 17, "end": 25},
-      {"entity": "Sterling Logistics Corp", "type": "ORG", "start": 30, "end": 53},
-      {"entity": "Samantha Reed", "type": "PER", "start": 64, "end": 77},
-      {"entity": "Bradley Cooper", "type": "PER", "start": 142, "end": 156},
-      {"entity": "samantha.reed@reedlegal.com", "type": "EMAIL", "start": 194, "end": 221},
-      {"entity": "212-555-9876", "type": "PHONE", "start": 225, "end": 237},
-      {"entity": "Zurich", "type": "LOC", "start": 307, "end": 313},
-      {"entity": "Switzerland", "type": "LOC", "start": 315, "end": 326}
+      {
+        "entity": "Rue des \u00c9coles",
+        "type": "STREET",
+        "start": 320,
+        "end": 334
+      },
+      {
+        "entity": "13",
+        "type": "TIME",
+        "start": 338,
+        "end": 340
+      },
+      {
+        "entity": "September/54",
+        "type": "DATE",
+        "start": 342,
+        "end": 354
+      }
     ],
-    "quasi_identifiers": [
-      "former CFO Bradley Cooper",
-      "unannounced executive termination in Zurich, Switzerland on May 12, 2022"
-    ]
+    "target_text": "s carefully and inform us immediately if there are any discrepancies or if you require further assistance. \n\nWe appreciate your cooperation in this process and look forward to reviewing your applications.\n\nWarm regards,\n\nAdmissions Office \n[University Name]  \n[University Address]  \n[City, State, Postcode]   \n[Country, [STREET]]  \n[TIME], [DATE]  "
   },
   {
-    "id": "sample_05_cybersecurity",
-    "domain": "Cybersecurity & IT",
-    "text": "Security incident report: Server 10.0.4.12 was compromised following an unauthorized root login from 198.51.100.42. System Administrator Carlos Mendez (carlos.mendez@cloudmesh.net) detected the exfiltration of confidential customer records belonging to BioGenix Labs. Contact Carlos directly at (312) 555-4321.",
+    "id": "HF-40772A",
+    "domain": "Document (BOD + TEL + USERNAME)",
+    "text": "- id_1:\n  Feb 8, 1986\n  iloweint\u00f6gl\n  4929-667-4889\n  Details: Engaged in extracurricular activities throughout high school, showcasing leadership skills. Enthusiastic about pursuing higher education to further develop interpersonal and academic abilities.\n- id_2:\n  26/10/2004\n  abdi\n  076 1352.8018\n  Details: Demonstrated exceptional academic performance in mathematics and sciences, with a keen interest in research and innovation. Activel",
     "direct_pii": [
-      {"entity": "10.0.4.12", "type": "IP_ADDRESS", "start": 33, "end": 42},
-      {"entity": "198.51.100.42", "type": "IP_ADDRESS", "start": 101, "end": 114},
-      {"entity": "Carlos Mendez", "type": "PER", "start": 137, "end": 150},
-      {"entity": "carlos.mendez@cloudmesh.net", "type": "EMAIL", "start": 152, "end": 179},
-      {"entity": "BioGenix Labs", "type": "ORG", "start": 239, "end": 252},
-      {"entity": "(312) 555-4321", "type": "PHONE", "start": 294, "end": 308}
+      {
+        "entity": "Feb 8, 1986",
+        "type": "BOD",
+        "start": 10,
+        "end": 21
+      },
+      {
+        "entity": "iloweint\u00f6gl",
+        "type": "USERNAME",
+        "start": 24,
+        "end": 35
+      },
+      {
+        "entity": "4929-667-4889",
+        "type": "TEL",
+        "start": 38,
+        "end": 51
+      },
+      {
+        "entity": "26/10/2004",
+        "type": "BOD",
+        "start": 267,
+        "end": 277
+      },
+      {
+        "entity": "abdi",
+        "type": "USERNAME",
+        "start": 280,
+        "end": 284
+      },
+      {
+        "entity": "076 1352.8018",
+        "type": "TEL",
+        "start": 287,
+        "end": 300
+      }
     ],
-    "quasi_identifiers": [
-      "System Administrator Carlos Mendez",
-      "Server 10.0.4.12 was compromised following an unauthorized root login"
-    ]
+    "target_text": "- id_1:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: Engaged in extracurricular activities throughout high school, showcasing leadership skills. Enthusiastic about pursuing higher education to further develop interpersonal and academic abilities.\n- id_2:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: Demonstrated exceptional academic performance in mathematics and sciences, with a keen interest in research and innovation. Activel"
   },
   {
-    "id": "sample_06_education",
-    "domain": "Education & Academic",
-    "text": "Professor Clara Oswald (SSN: 901-44-3321) submitted the grade review for student Thomas Shelby at Oxford University in Oxford, UK. Department Chair Dr. William Hartnell can be reached at w.hartnell@oxford.ac.uk or +44 1865 270000. Clara is currently the only faculty member with dual tenure in Theoretical Astrophysics and Medieval Literature.",
+    "id": "HF-40772B",
+    "domain": "Document (BOD + TEL + USERNAME)",
+    "text": "y involved in community service initiatives.\n- id_3:\n  Apr 29, 1973\n  29summikota\n  +51-063-367.7939\n  Details: Possesses extensive experience in the field of education, fostering a passion for nurturing young minds and shaping future generations through impactful teaching methodologies.\n- id_4:\n  May 26, 1993\n  npvhxlrgvjdhzjaf439498\n  +20-914.834.1296\n  Details: Recognized for outstanding achievements in academic research, particularly i",
     "direct_pii": [
-      {"entity": "Clara Oswald", "type": "PER", "start": 10, "end": 22},
-      {"entity": "901-44-3321", "type": "SSN", "start": 29, "end": 40},
-      {"entity": "Thomas Shelby", "type": "PER", "start": 81, "end": 94},
-      {"entity": "Oxford University", "type": "ORG", "start": 98, "end": 115},
-      {"entity": "Oxford", "type": "LOC", "start": 119, "end": 125},
-      {"entity": "UK", "type": "LOC", "start": 127, "end": 129},
-      {"entity": "William Hartnell", "type": "PER", "start": 152, "end": 168},
-      {"entity": "w.hartnell@oxford.ac.uk", "type": "EMAIL", "start": 187, "end": 210},
-      {"entity": "+44 1865 270000", "type": "PHONE", "start": 214, "end": 229}
+      {
+        "entity": "Apr 29, 1973",
+        "type": "BOD",
+        "start": 55,
+        "end": 67
+      },
+      {
+        "entity": "29summikota",
+        "type": "USERNAME",
+        "start": 70,
+        "end": 81
+      },
+      {
+        "entity": "+51-063-367.7939",
+        "type": "TEL",
+        "start": 84,
+        "end": 100
+      },
+      {
+        "entity": "May 26, 1993",
+        "type": "BOD",
+        "start": 299,
+        "end": 311
+      },
+      {
+        "entity": "npvhxlrgvjdhzjaf439498",
+        "type": "USERNAME",
+        "start": 314,
+        "end": 336
+      },
+      {
+        "entity": "+20-914.834.1296",
+        "type": "TEL",
+        "start": 339,
+        "end": 355
+      }
     ],
-    "quasi_identifiers": [
-      "only faculty member with dual tenure in Theoretical Astrophysics and Medieval Literature",
-      "Department Chair Dr. William Hartnell"
-    ]
+    "target_text": "y involved in community service initiatives.\n- id_3:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: Possesses extensive experience in the field of education, fostering a passion for nurturing young minds and shaping future generations through impactful teaching methodologies.\n- id_4:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: Recognized for outstanding achievements in academic research, particularly i"
   },
   {
-    "id": "sample_07_real_estate",
-    "domain": "Real Estate & Housing",
-    "text": "Tenant Arthur Dent signed a 2-year lease with Landlord Property Group on 2023-11-01 for the penthouse suite at 42 Wallaby Way, Sydney, Australia. The security deposit of $12,500 was paid via Visa 4111-2222-3333-4444. For maintenance requests, contact agent Ford Prefect at ford.p@landlordpg.com.au or +61 2 9123 4567.",
+    "id": "HF-40772C",
+    "domain": "Document (BOD + TEL + USERNAME)",
+    "text": "n the realm of social sciences. Committed to promoting inclusivity and diversity within academic environments.\n- id_5:\n  Sep 26, 1940\n  sangyal.alabdulmohsin\n  +3380820 0420\n  Details: A seasoned educator with a wealth of experience in curriculum development and student mentorship. Known for innovative teaching approaches that cater to diverse learning styles.\n- id_6:\n  Dec 18, 1969\n  nilou.ucci12\n  01881.881.151-3030\n  Details: Visionary",
     "direct_pii": [
-      {"entity": "Arthur Dent", "type": "PER", "start": 7, "end": 18},
-      {"entity": "Landlord Property Group", "type": "ORG", "start": 46, "end": 69},
-      {"entity": "42 Wallaby Way", "type": "LOC", "start": 111, "end": 125},
-      {"entity": "Sydney", "type": "LOC", "start": 127, "end": 133},
-      {"entity": "Australia", "type": "LOC", "start": 135, "end": 144},
-      {"entity": "4111-2222-3333-4444", "type": "CREDIT_CARD", "start": 196, "end": 215},
-      {"entity": "Ford Prefect", "type": "PER", "start": 252, "end": 264},
-      {"entity": "ford.p@landlordpg.com.au", "type": "EMAIL", "start": 268, "end": 292},
-      {"entity": "+61 2 9123 4567", "type": "PHONE", "start": 296, "end": 311}
+      {
+        "entity": "Sep 26, 1940",
+        "type": "BOD",
+        "start": 121,
+        "end": 133
+      },
+      {
+        "entity": "sangyal.alabdulmohsin",
+        "type": "USERNAME",
+        "start": 136,
+        "end": 157
+      },
+      {
+        "entity": "+3380820 0420",
+        "type": "TEL",
+        "start": 160,
+        "end": 173
+      },
+      {
+        "entity": "Dec 18, 1969",
+        "type": "BOD",
+        "start": 373,
+        "end": 385
+      },
+      {
+        "entity": "nilou.ucci12",
+        "type": "USERNAME",
+        "start": 388,
+        "end": 400
+      },
+      {
+        "entity": "01881.881.151-3030",
+        "type": "TEL",
+        "start": 403,
+        "end": 421
+      }
     ],
-    "quasi_identifiers": [
-      "penthouse suite at 42 Wallaby Way",
-      "security deposit of $12,500"
-    ]
+    "target_text": "n the realm of social sciences. Committed to promoting inclusivity and diversity within academic environments.\n- id_5:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: A seasoned educator with a wealth of experience in curriculum development and student mentorship. Known for innovative teaching approaches that cater to diverse learning styles.\n- id_6:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: Visionary "
   },
   {
-    "id": "sample_08_clinical_trial",
-    "domain": "Clinical Trial",
-    "text": "Subject #902, identified as Beatrice Baudelaire (DOB: 05/19/1975, SSN: 334-90-1287), enrolled in the Phase III trial for Oncovex-B at Memorial Sloan Kettering Cancer Center in Manhattan, NY. Principal Investigator Dr. Montgomery Montgomery (m.montgomery@mskcc.org, 646-555-8392) reported Beatrice is the 3rd female in North America with triple-positive refractory cholangiocarcinoma.",
+    "id": "HF-40772D",
+    "domain": "Document (BOD + TEL + USERNAME)",
+    "text": "educational leader with a track record of driving institutional improvements and fostering a culture of academic excellence. Passionate about creating inclusive and equitable educational environments.\n- id_7:\n  Jan 28, 1995\n  lqsdrojhmrlcw54\n  +07 69-909 8310\n  Details: A dynamic and forward-thinking educator dedicated to leveraging technology in education. Strong advocate for student-centered learning and personalized academic support.",
     "direct_pii": [
-      {"entity": "Beatrice Baudelaire", "type": "PER", "start": 27, "end": 46},
-      {"entity": "334-90-1287", "type": "SSN", "start": 69, "end": 80},
-      {"entity": "Memorial Sloan Kettering Cancer Center", "type": "ORG", "start": 134, "end": 172},
-      {"entity": "Manhattan", "type": "LOC", "start": 176, "end": 185},
-      {"entity": "NY", "type": "LOC", "start": 187, "end": 189},
-      {"entity": "Montgomery Montgomery", "type": "PER", "start": 217, "end": 238},
-      {"entity": "m.montgomery@mskcc.org", "type": "EMAIL", "start": 240, "end": 262},
-      {"entity": "646-555-8392", "type": "PHONE", "start": 264, "end": 276}
+      {
+        "entity": "Jan 28, 1995",
+        "type": "BOD",
+        "start": 211,
+        "end": 223
+      },
+      {
+        "entity": "lqsdrojhmrlcw54",
+        "type": "USERNAME",
+        "start": 226,
+        "end": 241
+      },
+      {
+        "entity": "+07 69-909 8310",
+        "type": "TEL",
+        "start": 244,
+        "end": 259
+      }
     ],
-    "quasi_identifiers": [
-      "3rd female in North America with triple-positive refractory cholangiocarcinoma",
-      "Phase III trial for Oncovex-B",
-      "DOB: 05/19/1975"
-    ]
+    "target_text": "educational leader with a track record of driving institutional improvements and fostering a culture of academic excellence. Passionate about creating inclusive and equitable educational environments.\n- id_7:\n  [BOD]\n  [USERNAME]\n  [TEL]\n  Details: A dynamic and forward-thinking educator dedicated to leveraging technology in education. Strong advocate for student-centered learning and personalized academic support."
   },
   {
-    "id": "sample_09_corporate_acquisition",
-    "domain": "Corporate M&A",
-    "text": "Managing Director Julian Assange of Horizon Capital advised on the $1.2B acquisition of Solaria Robotics in Munich, Germany. Invoices and tax filings were coordinated by Finance Director Helga Schmidt (helga.schmidt@horizoncap.de, +49 89 2444 8900). Julian is the 58-year-old former Olympic rower who led the largest European cleantech IPO in 2021.",
+    "id": "HF-40774A",
+    "domain": "Document (BOD + DATE + DRIVERLICENSE)",
+    "text": "Evaluation Report: Candidate Suitability for Admission\n\nDate: 29/06/2013\nTime: 7:59 PM\nLocation: CM21\n\nCandidate A:\n- Sex: M\n- Date of Birth: October/97\n- Email: MVC@tutanota.com\n- ID Card Number: RF69601MW\n- Driver's License: MASCU910077MV815\n- IP Address: 7836:3dcf:9edf:692:fd5f:4de5:a9d6:da24\n- Password: Be~o}.zq8^1\"\n\nCandidate B:\n- Sex: F\n- Date of Birth: 7th August 1963\n- Email: mindkassir@hotmail.com\n- ID Card Number: DE83548AE\n- Driver's",
     "direct_pii": [
-      {"entity": "Julian Assange", "type": "PER", "start": 18, "end": 32},
-      {"entity": "Horizon Capital", "type": "ORG", "start": 36, "end": 51},
-      {"entity": "Solaria Robotics", "type": "ORG", "start": 88, "end": 104},
-      {"entity": "Munich", "type": "LOC", "start": 108, "end": 114},
-      {"entity": "Germany", "type": "LOC", "start": 116, "end": 123},
-      {"entity": "Helga Schmidt", "type": "PER", "start": 189, "end": 202},
-      {"entity": "helga.schmidt@horizoncap.de", "type": "EMAIL", "start": 204, "end": 231},
-      {"entity": "+49 89 2444 8900", "type": "PHONE", "start": 233, "end": 249}
+      {
+        "entity": "29/06/2013",
+        "type": "DATE",
+        "start": 62,
+        "end": 72
+      },
+      {
+        "entity": "7:59 PM",
+        "type": "TIME",
+        "start": 79,
+        "end": 86
+      },
+      {
+        "entity": "CM21",
+        "type": "POSTCODE",
+        "start": 97,
+        "end": 101
+      },
+      {
+        "entity": "M",
+        "type": "SEX",
+        "start": 123,
+        "end": 124
+      },
+      {
+        "entity": "October/97",
+        "type": "BOD",
+        "start": 142,
+        "end": 152
+      },
+      {
+        "entity": "MVC@tutanota.com",
+        "type": "EMAIL",
+        "start": 162,
+        "end": 178
+      },
+      {
+        "entity": "RF69601MW",
+        "type": "IDCARD",
+        "start": 197,
+        "end": 206
+      },
+      {
+        "entity": "MASCU910077MV815",
+        "type": "DRIVERLICENSE",
+        "start": 227,
+        "end": 243
+      },
+      {
+        "entity": "7836:3dcf:9edf:692:fd5f:4de5:a9d6:da24",
+        "type": "IP",
+        "start": 258,
+        "end": 296
+      },
+      {
+        "entity": "Be~o}.zq8^1\"",
+        "type": "PASS",
+        "start": 309,
+        "end": 321
+      },
+      {
+        "entity": "F",
+        "type": "SEX",
+        "start": 343,
+        "end": 344
+      },
+      {
+        "entity": "7th August 1963",
+        "type": "BOD",
+        "start": 362,
+        "end": 377
+      },
+      {
+        "entity": "mindkassir@hotmail.com",
+        "type": "EMAIL",
+        "start": 387,
+        "end": 409
+      },
+      {
+        "entity": "DE83548AE",
+        "type": "IDCARD",
+        "start": 428,
+        "end": 437
+      }
     ],
-    "quasi_identifiers": [
-      "58-year-old former Olympic rower who led the largest European cleantech IPO in 2021",
-      "$1.2B acquisition of Solaria Robotics"
-    ]
+    "target_text": "Evaluation Report: Candidate Suitability for Admission\n\nDate: [DATE]\nTime: [TIME]\nLocation: [POSTCODE]\n\nCandidate A:\n- Sex: [SEX]\n- Date of Birth: [BOD]\n- Email: [EMAIL]\n- ID Card Number: [IDCARD]\n- Driver's License: [DRIVERLICENSE]\n- IP Address: [IP]\n- Password: [PASS]\n\nCandidate B:\n- Sex: [SEX]\n- Date of Birth: [BOD]\n- Email: [EMAIL]\n- ID Card Number: [IDCARD]\n- Driver's "
   },
   {
-    "id": "sample_10_customer_support",
-    "domain": "Customer Support & Telecom",
-    "text": "Customer Penelope Featherington called regarding billing dispute for broadband account at 10 Downing Street, London, United Kingdom. Support agent Colin Bridgerton verified her account using SSN ending in 889-12-7654 and phone 020 7946 0192. Penelope sent corroborating bank statements from p.featherington@mayfair.co.uk.",
+    "id": "HF-40774B",
+    "domain": "Document (DRIVERLICENSE + EMAIL + IDCARD)",
+    "text": "License: MINDA.658073.MR.352\n- IP Address: 1dca:680f:2938:6035:4ed8:81d:c6d6:3b1a\n- Password: \"{0w7/U\n\nOther Candidates:\n- Candidate C: Email: asukas55@aol.com, ID Card Number: UK57900JK\n- Candidate D: Email: 3chunmei@protonmail.com, ID Card Number: UGG576437H\n- Candidate E: Email: ydtjqhxrfiv1162@hotmail.com, ID Card Number: OU79828NR\n- Candidate F: Email: A@protonmail.com, ID Card Number: FE15976DV\n- Candidate G: Email: tdjispgtfiqx547@tutanot",
     "direct_pii": [
-      {"entity": "Penelope Featherington", "type": "PER", "start": 9, "end": 31},
-      {"entity": "10 Downing Street", "type": "LOC", "start": 91, "end": 108},
-      {"entity": "London", "type": "LOC", "start": 110, "end": 116},
-      {"entity": "United Kingdom", "type": "LOC", "start": 118, "end": 132},
-      {"entity": "Colin Bridgerton", "type": "PER", "start": 149, "end": 165},
-      {"entity": "889-12-7654", "type": "SSN", "start": 207, "end": 218},
-      {"entity": "020 7946 0192", "type": "PHONE", "start": 229, "end": 242},
-      {"entity": "p.featherington@mayfair.co.uk", "type": "EMAIL", "start": 296, "end": 325}
+      {
+        "entity": "MINDA.658073.MR.352",
+        "type": "DRIVERLICENSE",
+        "start": 9,
+        "end": 28
+      },
+      {
+        "entity": "1dca:680f:2938:6035:4ed8:81d:c6d6:3b1a",
+        "type": "IP",
+        "start": 43,
+        "end": 81
+      },
+      {
+        "entity": "\"{0w7/U",
+        "type": "PASS",
+        "start": 94,
+        "end": 101
+      },
+      {
+        "entity": "asukas55@aol.com",
+        "type": "EMAIL",
+        "start": 143,
+        "end": 159
+      },
+      {
+        "entity": "UK57900JK",
+        "type": "IDCARD",
+        "start": 177,
+        "end": 186
+      },
+      {
+        "entity": "3chunmei@protonmail.com",
+        "type": "EMAIL",
+        "start": 209,
+        "end": 232
+      },
+      {
+        "entity": "UGG576437H",
+        "type": "IDCARD",
+        "start": 250,
+        "end": 260
+      },
+      {
+        "entity": "ydtjqhxrfiv1162@hotmail.com",
+        "type": "EMAIL",
+        "start": 283,
+        "end": 310
+      },
+      {
+        "entity": "OU79828NR",
+        "type": "IDCARD",
+        "start": 328,
+        "end": 337
+      },
+      {
+        "entity": "A@protonmail.com",
+        "type": "EMAIL",
+        "start": 360,
+        "end": 376
+      },
+      {
+        "entity": "FE15976DV",
+        "type": "IDCARD",
+        "start": 394,
+        "end": 403
+      }
     ],
-    "quasi_identifiers": [
-      "broadband account at 10 Downing Street",
-      "billing dispute"
-    ]
+    "target_text": "License: [DRIVERLICENSE]\n- IP Address: [IP]\n- Password: [PASS]\n\nOther Candidates:\n- Candidate C: Email: [EMAIL], ID Card Number: [IDCARD]\n- Candidate D: Email: [EMAIL], ID Card Number: [IDCARD]\n- Candidate E: Email: [EMAIL], ID Card Number: [IDCARD]\n- Candidate F: Email: [EMAIL], ID Card Number: [IDCARD]\n- Candidate G: Email: tdjispgtfiqx547@tutanot"
   }
 ]
