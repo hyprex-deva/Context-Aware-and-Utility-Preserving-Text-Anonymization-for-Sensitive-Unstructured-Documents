@@ -62,26 +62,38 @@ class DirectPIIAnonymizer:
     - Offset-aware span collision resolver preventing overlapping replacements.
     """
 
-    # Compiled regex patterns for structured PII
+    # Compiled regex patterns for structured PII (IPv4/IPv6, Emails, SSN, ID Cards, Licenses, Passwords)
     REGEX_PATTERNS = {
         "EMAIL": re.compile(
-            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+(?:\.[A-Za-z]{2,}|\b)",
             re.IGNORECASE,
         ),
         "PHONE": re.compile(
             r"(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}\b"
         ),
         "SSN": re.compile(
-            r"\b\d{3}-\d{2}-\d{4}\b"
+            r"\b\d{3}-\d{2}-\d{4}\b|\b\d{3}\s\d{3}\s\d{4}\b"
         ),
         "IP_ADDRESS": re.compile(
-            r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}"
-            r"(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b"
+            r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|"
+            r"\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b|"
+            r"\b(?:[0-9a-fA-F]{1,4}:){1,7}:[0-9a-fA-F]{1,4}\b|"
+            r"\b::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}\b"
         ),
         "CREDIT_CARD": re.compile(
             r"\b(?:\d{4}[-\s]?){3}\d{4}\b|\b\d{15,16}\b"
         ),
+        "LICENSE": re.compile(
+            r"(?i)(?:License|Driver(?:\'s)?\s*License|Driving\s*License)\s*[:#\-]?\s*([A-Za-z0-9\.\-]{6,30})"
+        ),
+        "ID_CARD": re.compile(
+            r"(?i)(?:ID\s*Card(?:\s*Number)?|National\s*ID|ID\s*Doc(?:ument)?|ID\s*Card)\s*[:#\-]?\s*([A-Za-z0-9]{5,20})"
+        ),
+        "PASSWORD": re.compile(
+            r'(?i)(?:Password|Passphrase|Passwd|Secret\s*Key)\s*[:#\-]?\s*([^\s\n]{4,30})'
+        ),
     }
+
 
     # Standard NER entity label mapping to canonical tags
     LABEL_NORMALIZATION = {
@@ -183,8 +195,19 @@ class DirectPIIAnonymizer:
                 return self.faker.ssn()
             
             elif entity_type_upper == "IP_ADDRESS":
+                if ":" in raw_value:
+                    return self.faker.ipv6()
                 return self.faker.ipv4()
             
+            elif entity_type_upper in ("ID_CARD", "IDCARD", "NATIONAL_ID", "ID"):
+                return self.faker.bothify(text="??#####??").upper()
+            
+            elif entity_type_upper in ("LICENSE", "DRIVER_LICENSE", "DRIVERLICENSE"):
+                return self.faker.bothify(text="?????.######.??.###").upper()
+            
+            elif entity_type_upper in ("PASSWORD", "PASS", "PASSWD"):
+                return self.faker.password(length=8)
+
             elif entity_type_upper == "CREDIT_CARD":
                 return self.faker.credit_card_number(card_type=None)
             
@@ -205,6 +228,9 @@ class DirectPIIAnonymizer:
             "SSN": "987-65-4321",
             "IP_ADDRESS": "10.0.0.1",
             "CREDIT_CARD": "4000-1234-5678-9010",
+            "ID_CARD": "AB12345CD",
+            "LICENSE": "ABCDE.123456.FG.789",
+            "PASSWORD": "SecurePass!123",
             "MISC": "Enterprise Asset",
         }
         return fallback_map.get(entity_type_upper, f"SYNTHETIC_{entity_type_upper}")
@@ -222,19 +248,30 @@ class DirectPIIAnonymizer:
         results: List[Dict[str, Any]] = []
         for pii_type, pattern in self.REGEX_PATTERNS.items():
             for match in pattern.finditer(text):
-                val = match.group()
-                # Basic sanity filter for phone numbers to avoid purely short digits
+                # If regex contains capture groups (e.g. ID Card value), extract group 1
+                if match.groups():
+                    val = match.group(1).strip()
+                    start, end = match.start(1), match.end(1)
+                else:
+                    val = match.group().strip()
+                    start, end = match.start(), match.end()
+                
+                # Sanity filters
                 if pii_type == "PHONE" and len(re.sub(r"\D", "", val)) < 7:
                     continue
+                if not val or len(val) < 2:
+                    continue
+
                 results.append({
                     "entity_value": val,
                     "entity_type": pii_type,
-                    "start": match.start(),
-                    "end": match.end(),
+                    "start": start,
+                    "end": end,
                     "detector": "regex",
                     "score": 1.0,
                 })
         return results
+
 
     IGNORE_NER_TOKENS = {
         "ss", "ssn", "id", "dob", "bar", "bar id", "ip", "phone", "cc",
