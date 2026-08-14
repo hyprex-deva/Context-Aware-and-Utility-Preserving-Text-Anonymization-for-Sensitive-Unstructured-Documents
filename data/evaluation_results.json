@@ -1,0 +1,42 @@
+[
+  {
+    "Method / Architecture": "Baseline: Rigid Redaction ([REDACTED])",
+    "Privacy Precision": 0.7525,
+    "Privacy Recall": 0.95,
+    "Privacy F1": 0.8398,
+    "ROUGE-L F1": 0.6571,
+    "Semantic Cosine Sim": 0.5646,
+    "BERTScore F1": 0.795,
+    "Latency (sec)": 1.359
+  },
+  {
+    "Method / Architecture": "Baseline: Microsoft Presidio (<TAGS>)",
+    "Privacy Precision": 0.6226,
+    "Privacy Recall": 0.825,
+    "Privacy F1": 0.7097,
+    "ROUGE-L F1": 0.6807,
+    "Semantic Cosine Sim": 0.8098,
+    "BERTScore F1": 0.832,
+    "Latency (sec)": 0.475
+  },
+  {
+    "Method / Architecture": "Proposed: Stage 1 (Direct PII + Surrogates)",
+    "Privacy Precision": 0.7822,
+    "Privacy Recall": 0.9875,
+    "Privacy F1": 0.8729,
+    "ROUGE-L F1": 0.5869,
+    "Semantic Cosine Sim": 0.6129,
+    "BERTScore F1": 0.8838,
+    "Latency (sec)": 1.363
+  },
+  {
+    "Method / Architecture": "Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)",
+    "Privacy Precision": 0.7822,
+    "Privacy Recall": 0.9875,
+    "Privacy F1": 0.8729,
+    "ROUGE-L F1": 0.5869,
+    "Semantic Cosine Sim": 0.6129,
+    "BERTScore F1": 0.8838,
+    "Latency (sec)": 0.507
+  }
+]

@@ -1,0 +1,20 @@
+# Core Machine Learning & NLP
+torch>=2.0.0
+transformers>=4.38.0
+datasets>=2.18.0
+evaluate>=0.4.1
+bert-score>=0.3.13
+rouge-score>=0.1.2
+faker>=24.0.0
+spacy>=3.7.0
+presidio-analyzer>=2.2.35
+presidio-anonymizer>=2.2.35
+sentence-transformers>=2.5.0
+scikit-learn>=1.4.0
+
+# UI & Data Processing
+streamlit>=1.32.0
+pandas>=2.0.0
+numpy>=1.24.0
+tqdm>=4.66.0
+requests>=2.31.0

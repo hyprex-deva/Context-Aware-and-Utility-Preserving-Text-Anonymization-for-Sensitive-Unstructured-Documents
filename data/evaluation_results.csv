@@ -1,0 +1,5 @@
+Method / Architecture,Privacy Precision,Privacy Recall,Privacy F1,ROUGE-L F1,Semantic Cosine Sim,BERTScore F1,Latency (sec)
+Baseline: Rigid Redaction ([REDACTED]),0.7525,0.95,0.8398,0.6571,0.5646,0.795,1.359
+Baseline: Microsoft Presidio (<TAGS>),0.6226,0.825,0.7097,0.6807,0.8098,0.832,0.475
+Proposed: Stage 1 (Direct PII + Surrogates),0.7822,0.9875,0.8729,0.5869,0.6129,0.8838,1.363
+Proposed: Two-Stage Architecture (Surrogates + Semantic SLM),0.7822,0.9875,0.8729,0.5869,0.6129,0.8838,0.507

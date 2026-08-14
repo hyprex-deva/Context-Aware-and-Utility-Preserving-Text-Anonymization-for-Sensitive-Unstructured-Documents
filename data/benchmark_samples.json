@@ -1,0 +1,195 @@
+[
+  {
+    "id": "sample_01_healthcare",
+    "domain": "Healthcare",
+    "text": "Patient Eleanor Vance (DOB: 12/04/1982, SSN: 482-19-8921) visited Dr. Robert Langdon at Johns Hopkins Hospital on August 14, 2023. She can be reached at eleanor.vance@medmail.org or (410) 555-0199. Eleanor works as the sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors in Baltimore, Maryland. She lives at 742 Evergreen Terrace.",
+    "direct_pii": [
+      {"entity": "Eleanor Vance", "type": "PER", "start": 8, "end": 21},
+      {"entity": "482-19-8921", "type": "SSN", "start": 44, "end": 55},
+      {"entity": "Robert Langdon", "type": "PER", "start": 68, "end": 82},
+      {"entity": "Johns Hopkins Hospital", "type": "ORG", "start": 86, "end": 108},
+      {"entity": "eleanor.vance@medmail.org", "type": "EMAIL", "start": 154, "end": 179},
+      {"entity": "(410) 555-0199", "type": "PHONE", "start": 183, "end": 197},
+      {"entity": "Baltimore", "type": "LOC", "start": 296, "end": 305},
+      {"entity": "Maryland", "type": "LOC", "start": 307, "end": 315},
+      {"entity": "742 Evergreen Terrace", "type": "LOC", "start": 330, "end": 351}
+    ],
+    "quasi_identifiers": [
+      "sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors in Baltimore, Maryland",
+      "DOB: 12/04/1982",
+      "August 14, 2023"
+    ]
+  },
+  {
+    "id": "sample_02_finance",
+    "domain": "Finance & Banking",
+    "text": "Account holder Marcus Aurelius transferred $45,000 to Apex Global Ventures on 2024-03-15 from IP address 192.168.1.105. Marcus confirmed the wire instruction with Senior Wealth Manager Sarah Jenkins at Goldman Sachs in New York City via sarah.jenkins@goldmansachs.com. His credit card 4532-8901-2345-6789 was charged a $25 processing fee.",
+    "direct_pii": [
+      {"entity": "Marcus Aurelius", "type": "PER", "start": 15, "end": 30},
+      {"entity": "Apex Global Ventures", "type": "ORG", "start": 46, "end": 66},
+      {"entity": "192.168.1.105", "type": "IP_ADDRESS", "start": 105, "end": 118},
+      {"entity": "Sarah Jenkins", "type": "PER", "start": 186, "end": 199},
+      {"entity": "Goldman Sachs", "type": "ORG", "start": 203, "end": 216},
+      {"entity": "New York City", "type": "LOC", "start": 220, "end": 233},
+      {"entity": "sarah.jenkins@goldmansachs.com", "type": "EMAIL", "start": 238, "end": 268},
+      {"entity": "4532-8901-2345-6789", "type": "CREDIT_CARD", "start": 287, "end": 306}
+    ],
+    "quasi_identifiers": [
+      "transferred $45,000",
+      "Senior Wealth Manager at Goldman Sachs in New York City",
+      "on 2024-03-15"
+    ]
+  },
+  {
+    "id": "sample_03_whistleblower_hr",
+    "domain": "HR & Whistleblower",
+    "text": "An internal complaint was filed by David K. Miller, Lead Quantum Computing Architect at Nebula Tech in Seattle, Washington. David reported unethical contracting to VP of HR Linda Sterling (linda.sterling@nebulatech.io, +1-206-555-0143). David is the only employee in the 50-person startup holding 4 patents in topological quantum gates.",
+    "direct_pii": [
+      {"entity": "David K. Miller", "type": "PER", "start": 35, "end": 50},
+      {"entity": "Nebula Tech", "type": "ORG", "start": 88, "end": 99},
+      {"entity": "Seattle", "type": "LOC", "start": 103, "end": 110},
+      {"entity": "Washington", "type": "LOC", "start": 112, "end": 122},
+      {"entity": "Linda Sterling", "type": "PER", "start": 172, "end": 186},
+      {"entity": "linda.sterling@nebulatech.io", "type": "EMAIL", "start": 188, "end": 216},
+      {"entity": "+1-206-555-0143", "type": "PHONE", "start": 218, "end": 233}
+    ],
+    "quasi_identifiers": [
+      "Lead Quantum Computing Architect at Nebula Tech in Seattle, Washington",
+      "only employee in the 50-person startup holding 4 patents in topological quantum gates"
+    ]
+  },
+  {
+    "id": "sample_04_legal",
+    "domain": "Legal & Dispute",
+    "text": "In the matter of Harrison vs. Sterling Logistics Corp, Attorney Samantha Reed (Bar ID: NY-98421) submitted deposition records on behalf of former CFO Bradley Cooper. Inquiries should be sent to samantha.reed@reedlegal.com or 212-555-9876. The dispute involves an unannounced executive termination in Zurich, Switzerland on May 12, 2022.",
+    "direct_pii": [
+      {"entity": "Harrison", "type": "PER", "start": 17, "end": 25},
+      {"entity": "Sterling Logistics Corp", "type": "ORG", "start": 30, "end": 53},
+      {"entity": "Samantha Reed", "type": "PER", "start": 64, "end": 77},
+      {"entity": "Bradley Cooper", "type": "PER", "start": 142, "end": 156},
+      {"entity": "samantha.reed@reedlegal.com", "type": "EMAIL", "start": 194, "end": 221},
+      {"entity": "212-555-9876", "type": "PHONE", "start": 225, "end": 237},
+      {"entity": "Zurich", "type": "LOC", "start": 307, "end": 313},
+      {"entity": "Switzerland", "type": "LOC", "start": 315, "end": 326}
+    ],
+    "quasi_identifiers": [
+      "former CFO Bradley Cooper",
+      "unannounced executive termination in Zurich, Switzerland on May 12, 2022"
+    ]
+  },
+  {
+    "id": "sample_05_cybersecurity",
+    "domain": "Cybersecurity & IT",
+    "text": "Security incident report: Server 10.0.4.12 was compromised following an unauthorized root login from 198.51.100.42. System Administrator Carlos Mendez (carlos.mendez@cloudmesh.net) detected the exfiltration of confidential customer records belonging to BioGenix Labs. Contact Carlos directly at (312) 555-4321.",
+    "direct_pii": [
+      {"entity": "10.0.4.12", "type": "IP_ADDRESS", "start": 33, "end": 42},
+      {"entity": "198.51.100.42", "type": "IP_ADDRESS", "start": 101, "end": 114},
+      {"entity": "Carlos Mendez", "type": "PER", "start": 137, "end": 150},
+      {"entity": "carlos.mendez@cloudmesh.net", "type": "EMAIL", "start": 152, "end": 179},
+      {"entity": "BioGenix Labs", "type": "ORG", "start": 239, "end": 252},
+      {"entity": "(312) 555-4321", "type": "PHONE", "start": 294, "end": 308}
+    ],
+    "quasi_identifiers": [
+      "System Administrator Carlos Mendez",
+      "Server 10.0.4.12 was compromised following an unauthorized root login"
+    ]
+  },
+  {
+    "id": "sample_06_education",
+    "domain": "Education & Academic",
+    "text": "Professor Clara Oswald (SSN: 901-44-3321) submitted the grade review for student Thomas Shelby at Oxford University in Oxford, UK. Department Chair Dr. William Hartnell can be reached at w.hartnell@oxford.ac.uk or +44 1865 270000. Clara is currently the only faculty member with dual tenure in Theoretical Astrophysics and Medieval Literature.",
+    "direct_pii": [
+      {"entity": "Clara Oswald", "type": "PER", "start": 10, "end": 22},
+      {"entity": "901-44-3321", "type": "SSN", "start": 29, "end": 40},
+      {"entity": "Thomas Shelby", "type": "PER", "start": 81, "end": 94},
+      {"entity": "Oxford University", "type": "ORG", "start": 98, "end": 115},
+      {"entity": "Oxford", "type": "LOC", "start": 119, "end": 125},
+      {"entity": "UK", "type": "LOC", "start": 127, "end": 129},
+      {"entity": "William Hartnell", "type": "PER", "start": 152, "end": 168},
+      {"entity": "w.hartnell@oxford.ac.uk", "type": "EMAIL", "start": 187, "end": 210},
+      {"entity": "+44 1865 270000", "type": "PHONE", "start": 214, "end": 229}
+    ],
+    "quasi_identifiers": [
+      "only faculty member with dual tenure in Theoretical Astrophysics and Medieval Literature",
+      "Department Chair Dr. William Hartnell"
+    ]
+  },
+  {
+    "id": "sample_07_real_estate",
+    "domain": "Real Estate & Housing",
+    "text": "Tenant Arthur Dent signed a 2-year lease with Landlord Property Group on 2023-11-01 for the penthouse suite at 42 Wallaby Way, Sydney, Australia. The security deposit of $12,500 was paid via Visa 4111-2222-3333-4444. For maintenance requests, contact agent Ford Prefect at ford.p@landlordpg.com.au or +61 2 9123 4567.",
+    "direct_pii": [
+      {"entity": "Arthur Dent", "type": "PER", "start": 7, "end": 18},
+      {"entity": "Landlord Property Group", "type": "ORG", "start": 46, "end": 69},
+      {"entity": "42 Wallaby Way", "type": "LOC", "start": 111, "end": 125},
+      {"entity": "Sydney", "type": "LOC", "start": 127, "end": 133},
+      {"entity": "Australia", "type": "LOC", "start": 135, "end": 144},
+      {"entity": "4111-2222-3333-4444", "type": "CREDIT_CARD", "start": 196, "end": 215},
+      {"entity": "Ford Prefect", "type": "PER", "start": 252, "end": 264},
+      {"entity": "ford.p@landlordpg.com.au", "type": "EMAIL", "start": 268, "end": 292},
+      {"entity": "+61 2 9123 4567", "type": "PHONE", "start": 296, "end": 311}
+    ],
+    "quasi_identifiers": [
+      "penthouse suite at 42 Wallaby Way",
+      "security deposit of $12,500"
+    ]
+  },
+  {
+    "id": "sample_08_clinical_trial",
+    "domain": "Clinical Trial",
+    "text": "Subject #902, identified as Beatrice Baudelaire (DOB: 05/19/1975, SSN: 334-90-1287), enrolled in the Phase III trial for Oncovex-B at Memorial Sloan Kettering Cancer Center in Manhattan, NY. Principal Investigator Dr. Montgomery Montgomery (m.montgomery@mskcc.org, 646-555-8392) reported Beatrice is the 3rd female in North America with triple-positive refractory cholangiocarcinoma.",
+    "direct_pii": [
+      {"entity": "Beatrice Baudelaire", "type": "PER", "start": 27, "end": 46},
+      {"entity": "334-90-1287", "type": "SSN", "start": 69, "end": 80},
+      {"entity": "Memorial Sloan Kettering Cancer Center", "type": "ORG", "start": 134, "end": 172},
+      {"entity": "Manhattan", "type": "LOC", "start": 176, "end": 185},
+      {"entity": "NY", "type": "LOC", "start": 187, "end": 189},
+      {"entity": "Montgomery Montgomery", "type": "PER", "start": 217, "end": 238},
+      {"entity": "m.montgomery@mskcc.org", "type": "EMAIL", "start": 240, "end": 262},
+      {"entity": "646-555-8392", "type": "PHONE", "start": 264, "end": 276}
+    ],
+    "quasi_identifiers": [
+      "3rd female in North America with triple-positive refractory cholangiocarcinoma",
+      "Phase III trial for Oncovex-B",
+      "DOB: 05/19/1975"
+    ]
+  },
+  {
+    "id": "sample_09_corporate_acquisition",
+    "domain": "Corporate M&A",
+    "text": "Managing Director Julian Assange of Horizon Capital advised on the $1.2B acquisition of Solaria Robotics in Munich, Germany. Invoices and tax filings were coordinated by Finance Director Helga Schmidt (helga.schmidt@horizoncap.de, +49 89 2444 8900). Julian is the 58-year-old former Olympic rower who led the largest European cleantech IPO in 2021.",
+    "direct_pii": [
+      {"entity": "Julian Assange", "type": "PER", "start": 18, "end": 32},
+      {"entity": "Horizon Capital", "type": "ORG", "start": 36, "end": 51},
+      {"entity": "Solaria Robotics", "type": "ORG", "start": 88, "end": 104},
+      {"entity": "Munich", "type": "LOC", "start": 108, "end": 114},
+      {"entity": "Germany", "type": "LOC", "start": 116, "end": 123},
+      {"entity": "Helga Schmidt", "type": "PER", "start": 189, "end": 202},
+      {"entity": "helga.schmidt@horizoncap.de", "type": "EMAIL", "start": 204, "end": 231},
+      {"entity": "+49 89 2444 8900", "type": "PHONE", "start": 233, "end": 249}
+    ],
+    "quasi_identifiers": [
+      "58-year-old former Olympic rower who led the largest European cleantech IPO in 2021",
+      "$1.2B acquisition of Solaria Robotics"
+    ]
+  },
+  {
+    "id": "sample_10_customer_support",
+    "domain": "Customer Support & Telecom",
+    "text": "Customer Penelope Featherington called regarding billing dispute for broadband account at 10 Downing Street, London, United Kingdom. Support agent Colin Bridgerton verified her account using SSN ending in 889-12-7654 and phone 020 7946 0192. Penelope sent corroborating bank statements from p.featherington@mayfair.co.uk.",
+    "direct_pii": [
+      {"entity": "Penelope Featherington", "type": "PER", "start": 9, "end": 31},
+      {"entity": "10 Downing Street", "type": "LOC", "start": 91, "end": 108},
+      {"entity": "London", "type": "LOC", "start": 110, "end": 116},
+      {"entity": "United Kingdom", "type": "LOC", "start": 118, "end": 132},
+      {"entity": "Colin Bridgerton", "type": "PER", "start": 149, "end": 165},
+      {"entity": "889-12-7654", "type": "SSN", "start": 207, "end": 218},
+      {"entity": "020 7946 0192", "type": "PHONE", "start": 229, "end": 242},
+      {"entity": "p.featherington@mayfair.co.uk", "type": "EMAIL", "start": 296, "end": 325}
+    ],
+    "quasi_identifiers": [
+      "broadband account at 10 Downing Street",
+      "billing dispute"
+    ]
+  }
+]
