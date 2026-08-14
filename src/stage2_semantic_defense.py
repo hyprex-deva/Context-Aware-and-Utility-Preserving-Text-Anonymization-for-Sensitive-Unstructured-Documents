@@ -171,23 +171,11 @@ You MUST return a valid JSON object strictly with keys:
                     if gen_text and isinstance(gen_text, str) and len(gen_text.strip()) > 5:
                         return gen_text.strip(), mods
 
-            logger.warning(f"Ollama returned non-200 status code: {response.status_code}")
         except Exception as exc:
             logger.error(f"Failed to query Ollama ({self.ollama_model}): {exc}")
-            # Fallback to 0.5b if 1.5b failed
-            if self.ollama_model != "qwen2.5:0.5b":
-                try:
-                    logger.info("Retrying with qwen2.5:0.5b...")
-                    payload["model"] = "qwen2.5:0.5b"
-                    res2 = requests.post(f"{self.ollama_url}/api/generate", json=payload, timeout=30)
-                    if res2.status_code == 200:
-                        parsed2 = json.loads(res2.json().get("response", "{}"))
-                        return parsed2.get("generalized_text", stage1_text), parsed2.get("modifications", [])
-                except Exception:
-                    pass
-
 
         return stage1_text, []
+
 
     def generalize_text(
         self, stage1_text: str, original_text: Optional[str] = None

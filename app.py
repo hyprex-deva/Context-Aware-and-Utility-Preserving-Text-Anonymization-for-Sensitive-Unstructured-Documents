@@ -139,16 +139,11 @@ def get_stage1_anonymizer() -> DirectPIIAnonymizer:
 
 
 @st.cache_resource
-def get_stage2_defense(
-    ollama_model: str = "qwen2.5:1.5b", threshold: float = 0.80
-) -> SemanticQuasiIdentifierDefense:
+def get_stage2_defense(threshold: float = 0.80) -> SemanticQuasiIdentifierDefense:
     return SemanticQuasiIdentifierDefense(
-        ollama_model=ollama_model,
+        ollama_model="qwen2.5:1.5b",
         similarity_threshold=threshold,
     )
-
-
-
 
 
 @st.cache_resource
@@ -162,23 +157,41 @@ def get_redacted_baseline() -> BaselineRedacted:
     return BaselineRedacted(stage1_anonymizer=s1)
 
 
-def load_preset_examples() -> List[Dict[str, Any]]:
-    benchmark_path = os.path.join(os.path.dirname(__file__), "data", "benchmark_samples.json")
-    if os.path.exists(benchmark_path):
-        try:
-            with open(benchmark_path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return [
-        {
-            "id": "sample_01",
-            "domain": "Healthcare",
-            "text": "Patient Eleanor Vance (DOB: 12/04/1982, SSN: 482-19-8921) visited Dr. Robert Langdon at Johns Hopkins Hospital. She can be reached at eleanor.vance@medmail.org or (410) 555-0199. Eleanor works as the sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors in Baltimore, Maryland.",
-            "direct_pii": [],
-            "quasi_identifiers": [],
+@st.cache_resource
+def load_full_dataset():
+    """Load the complete ai4privacy/pii-masking-300k dataset cached locally."""
+    try:
+        from datasets import load_dataset
+        ds = load_dataset("ai4privacy/pii-masking-300k", split="train")
+        return ds
+    except Exception as e:
+        logger.warning(f"Error loading full dataset: {e}")
+        return None
+
+
+def get_dataset_sample(ds, idx: int) -> Dict[str, Any]:
+    """Retrieve sample text and metadata by index."""
+    if ds is not None and 0 <= idx < len(ds):
+        row = ds[idx]
+        masks = row.get("privacy_mask", [])
+        direct_pii = [
+            {"entity": m["value"], "type": m["label"], "start": m["start"], "end": m["end"]}
+            for m in masks
+        ]
+        return {
+            "id": row.get("id", f"sample_{idx}"),
+            "text": row.get("source_text", ""),
+            "target_text": row.get("target_text", ""),
+            "direct_pii": direct_pii,
+            "language": row.get("language", "English"),
         }
-    ]
+    return {
+        "id": "fallback_01",
+        "text": "Please enter your unstructured text here to sanitize.",
+        "target_text": "",
+        "direct_pii": [],
+        "language": "English",
+    }
 
 
 def highlight_entities(text: str, entities: List[Dict[str, Any]]) -> str:
@@ -223,7 +236,6 @@ def highlight_entities(text: str, entities: List[Dict[str, Any]]) -> str:
     return "".join(chars)
 
 
-
 def main():
     # Application Header
     st.markdown(
@@ -232,37 +244,46 @@ def main():
             <h1>🛡️ Context-Aware & Utility-Preserving Text Anonymization</h1>
             <p>
                 Two-Stage Architecture: <strong>Stage 1</strong> (Deterministic Synthetic Surrogates via Transformer NER + Regex) 
-                &rarr; <strong>Stage 2</strong> (Hierarchical Quasi-Identifier Generalization via SLM + MiniLM Semantic Drift Guardrail).
+                &rarr; <strong>Stage 2</strong> (Hierarchical Quasi-Identifier Generalization via <strong>Ollama qwen2.5:1.5b</strong> + MiniLM Semantic Drift Guardrail).
             </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    preset_samples = load_preset_examples()
+    full_ds = load_full_dataset()
+    total_samples = len(full_ds) if full_ds is not None else 0
 
     # Sidebar Controls
     with st.sidebar:
         st.header("⚙️ Configuration & Controls")
         
-        # Domain template selector
-        sample_options = [f"{s['domain']}: {s['id']}" for s in preset_samples]
-        selected_idx = st.selectbox(
-            "📁 Load Domain Template",
-            range(len(sample_options)),
-            format_func=lambda i: sample_options[i],
-            index=0,
-        )
-        current_sample = preset_samples[selected_idx]
+        st.subheader("📚 Dataset: `ai4privacy/pii-masking-300k`")
+        if total_samples > 0:
+            st.caption(f"Loaded **{total_samples:,}** total benchmark documents.")
+            
+            sample_idx = st.number_input(
+                "🔢 Choose Sample Index (0 to total)",
+                min_value=0,
+                max_value=total_samples - 1,
+                value=0,
+                step=1,
+                help=f"Select any document index from 0 to {total_samples-1}.",
+            )
+            current_sample = get_dataset_sample(full_ds, sample_idx)
+            st.info(f"**Document ID:** `{current_sample['id']}` ({current_sample['language']})")
+        else:
+            st.warning("Hugging Face dataset not found locally. Loading defaults.")
+            current_sample = {
+                "id": "sample_0",
+                "text": "License: MINDA.658073.MR.352\n- IP Address: 1dca:680f:2938:6035:4ed8:81d:c6d6:3b1a\n- Password: \"{0w7/U\n\nOther Candidates:\n- Candidate C: Email: asukas55@aol.com, ID Card Number: UK57900JK\n- Candidate D: Email: 3chunmei@protonmail.com, ID Card Number: UGG576437H\n- Candidate E: Email: ydtjqhxrfiv1162@hotmail.com, ID Card Number: OU79828NR\n- Candidate F: Email: A@protonmail.com, ID Card Number: FE15976DV\n- Candidate G: Email: tdjispgtfiqx547@tutanot",
+                "direct_pii": [],
+                "language": "English",
+            }
 
         st.divider()
         st.subheader("Stage 2 Reasoning Engine")
-        ollama_model_choice = st.selectbox(
-            "🦙 Ollama Model",
-            ["qwen2.5:1.5b", "qwen2.5:0.5b"],
-            index=0,
-            help="qwen2.5:1.5b has strong instruction-following reasoning to generalize dates/amounts/roles. qwen2.5:0.5b is ultra-lightweight.",
-        )
+        st.success("🦙 **Ollama SLM**: `qwen2.5:1.5b` (Active)")
         
         sim_threshold = st.slider(
             "Semantic Drift Threshold (Cosine Sim)",
@@ -293,6 +314,7 @@ def main():
         )
 
 
+
     # Text Input Area
     input_text = st.text_area(
         "📝 Input Unstructured Document",
@@ -307,15 +329,12 @@ def main():
 
     if sanitize_btn or input_text:
         # Load pipelines
-        with st.spinner(f"Processing through Two-Stage Anonymization Architecture (Ollama {ollama_model_choice})..."):
+        with st.spinner("Processing through Two-Stage Anonymization Architecture (Ollama qwen2.5:1.5b)..."):
             stage1_engine = get_stage1_anonymizer()
-            stage2_engine = get_stage2_defense(
-                ollama_model=ollama_model_choice,
-                threshold=sim_threshold,
-            )
-
+            stage2_engine = get_stage2_defense(threshold=sim_threshold)
             presidio_engine = get_presidio_baseline()
             redacted_engine = get_redacted_baseline()
+
 
             # Execute Stage 1
             s1_result = stage1_engine.anonymize(input_text)

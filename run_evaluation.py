@@ -220,9 +220,10 @@ def main():
     parser.add_argument(
         "--ollama_model",
         type=str,
-        default="qwen2.5:0.5b",
-        help="Ollama model tag for Stage 2 (default: qwen2.5:0.5b)",
+        default="qwen2.5:1.5b",
+        help="Ollama model tag for Stage 2 (default: qwen2.5:1.5b)",
     )
+
     parser.add_argument(
         "--skip_heavy_metrics",
         action="store_true",

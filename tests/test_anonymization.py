@@ -66,7 +66,8 @@ class TestDirectPIIAnonymizer(unittest.TestCase):
 class TestSemanticQuasiIdentifierDefense(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.defense = SemanticQuasiIdentifierDefense(ollama_model="qwen2.5:0.5b", similarity_threshold=0.70)
+        cls.defense = SemanticQuasiIdentifierDefense(ollama_model="qwen2.5:1.5b", similarity_threshold=0.70)
+
 
     def test_quasi_identifier_candidate_generalization(self):
         text = (
