@@ -99,7 +99,11 @@ st.markdown(
     .badge-ssn { background-color: #ede9fe; color: #5b21b6; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
     .badge-ip { background-color: #ccfbf1; color: #115e59; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
     .badge-card { background-color: #ffedd5; color: #9a3412; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
+    .badge-id { background-color: #f3e8ff; color: #6b21a8; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
+    .badge-license { background-color: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
+    .badge-pass { background-color: #fef2f2; color: #b91c1c; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
     .badge-qi { background-color: #e2e8f0; color: #334155; padding: 2px 6px; border-radius: 4px; font-weight: 500; font-size: 13px; }
+
     
     .guardrail-pass {
         background-color: #ecfdf5;
@@ -199,6 +203,11 @@ def highlight_entities(text: str, entities: List[Dict[str, Any]]) -> str:
         "SSN": "badge-ssn",
         "IP_ADDRESS": "badge-ip",
         "CREDIT_CARD": "badge-card",
+        "ID_CARD": "badge-id",
+        "IDCARD": "badge-id",
+        "LICENSE": "badge-license",
+        "DRIVER_LICENSE": "badge-license",
+        "PASSWORD": "badge-pass",
         "MISC": "badge-qi",
     }
 
@@ -212,6 +221,7 @@ def highlight_entities(text: str, entities: List[Dict[str, Any]]) -> str:
         chars[start:end] = list(badge_html)
 
     return "".join(chars)
+
 
 
 def main():
@@ -273,11 +283,15 @@ def main():
             - <span class='badge-email'>EMAIL</span> Email Addresses
             - <span class='badge-phone'>PHONE</span> Phone Numbers
             - <span class='badge-ssn'>SSN</span> Social Security Numbers
-            - <span class='badge-ip'>IP</span> IP Addresses
+            - <span class='badge-ip'>IP</span> IP Addresses (v4/v6)
             - <span class='badge-card'>CARD</span> Credit Cards
+            - <span class='badge-id'>ID_CARD</span> ID Card / National IDs
+            - <span class='badge-license'>LICENSE</span> Driver / State Licenses
+            - <span class='badge-pass'>PASSWORD</span> Passwords / Secrets
             """,
             unsafe_allow_html=True,
         )
+
 
     # Text Input Area
     input_text = st.text_area(
