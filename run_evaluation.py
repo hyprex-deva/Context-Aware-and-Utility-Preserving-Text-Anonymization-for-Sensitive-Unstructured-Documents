@@ -80,7 +80,7 @@ def load_benchmark_data(data_path: str, max_samples: int = 10) -> List[Dict[str,
 def run_benchmark(
     samples: List[Dict[str, Any]],
     output_dir: str = "data",
-    backend_stage2: str = "heuristic",
+    ollama_model: str = "qwen2.5:0.5b",
     compute_heavy_metrics: bool = True,
 ) -> pd.DataFrame:
     """
@@ -90,11 +90,12 @@ def run_benchmark(
     logger.info(f"Starting Benchmark Evaluation on {len(samples)} multi-domain test samples...")
 
     # Initialize models
-    logger.info("Initializing models...")
+    logger.info(f"Initializing models (Stage 2: Ollama {ollama_model})...")
     stage1 = DirectPIIAnonymizer(use_ner=True)
-    stage2 = SemanticQuasiIdentifierDefense(backend=backend_stage2)
+    stage2 = SemanticQuasiIdentifierDefense(ollama_model=ollama_model)
     presidio_base = BaselinePresidio()
     redacted_base = BaselineRedacted(stage1_anonymizer=stage1)
+
 
     original_texts = [s["text"] for s in samples]
     ground_truth_entities = [s.get("direct_pii", []) for s in samples]
@@ -223,11 +224,10 @@ def main():
         help="Directory to save evaluation results",
     )
     parser.add_argument(
-        "--stage2_backend",
+        "--ollama_model",
         type=str,
-        default="heuristic",
-        choices=["heuristic", "ollama", "hf_pipeline"],
-        help="Stage 2 SLM backend to use",
+        default="qwen2.5:0.5b",
+        help="Ollama model tag for Stage 2 (default: qwen2.5:0.5b)",
     )
     parser.add_argument(
         "--skip_heavy_metrics",
@@ -240,10 +240,11 @@ def main():
     df_results = run_benchmark(
         samples=samples,
         output_dir=args.output_dir,
-        backend_stage2=args.stage2_backend,
+        ollama_model=args.ollama_model,
         compute_heavy_metrics=not args.skip_heavy_metrics,
     )
     print_comparison_table(df_results)
+
 
 
 if __name__ == "__main__":

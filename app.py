@@ -135,14 +135,12 @@ def get_stage1_anonymizer() -> DirectPIIAnonymizer:
 
 
 @st.cache_resource
-def get_stage2_defense(
-    backend: str, threshold: float, hf_model_name: str = "Qwen/Qwen2.5-0.5B-Instruct"
-) -> SemanticQuasiIdentifierDefense:
+def get_stage2_defense(threshold: float = 0.80) -> SemanticQuasiIdentifierDefense:
     return SemanticQuasiIdentifierDefense(
-        backend=backend,
+        ollama_model="qwen2.5:0.5b",
         similarity_threshold=threshold,
-        hf_model_name=hf_model_name,
     )
+
 
 
 
@@ -246,26 +244,7 @@ def main():
 
         st.divider()
         st.subheader("Stage 2 Reasoning Engine")
-        slm_backend = st.selectbox(
-            "SLM Backend",
-            ["hf_pipeline", "heuristic", "ollama"],
-            index=0,
-            help="Select SLM inference engine for quasi-identifier generalization.",
-        )
-
-        hf_model_choice = "Qwen/Qwen2.5-0.5B-Instruct"
-        if slm_backend == "hf_pipeline":
-            hf_model_choice = st.selectbox(
-                "🤗 Hugging Face SLM Model",
-                [
-                    "Qwen/Qwen2.5-0.5B-Instruct",
-                    "Qwen/Qwen2.5-1.5B-Instruct",
-                    "meta-llama/Llama-3.2-1B-Instruct",
-                    "google/gemma-2-2b-it",
-                ],
-                index=0,
-                help="Select instruction-tuned SLM model from Hugging Face.",
-            )
+        st.info("🦙 **Ollama SLM**: `qwen2.5:0.5b`")
         
         sim_threshold = st.slider(
             "Semantic Drift Threshold (Cosine Sim)",
@@ -306,16 +285,11 @@ def main():
 
     if sanitize_btn or input_text:
         # Load pipelines
-        with st.spinner("Processing through Two-Stage Anonymization Architecture..."):
+        with st.spinner("Processing through Two-Stage Anonymization Architecture (Ollama qwen2.5:0.5b)..."):
             stage1_engine = get_stage1_anonymizer()
-            stage2_engine = get_stage2_defense(
-                backend=slm_backend,
-                threshold=sim_threshold,
-                hf_model_name=hf_model_choice,
-            )
+            stage2_engine = get_stage2_defense(threshold=sim_threshold)
             presidio_engine = get_presidio_baseline()
             redacted_engine = get_redacted_baseline()
-
 
             # Execute Stage 1
             s1_result = stage1_engine.anonymize(input_text)
@@ -324,6 +298,7 @@ def main():
             s2_result = stage2_engine.generalize_text(
                 stage1_text=s1_result["sanitized_text"], original_text=input_text
             )
+
 
             # Execute Baselines
             presidio_res = presidio_engine.anonymize(input_text)

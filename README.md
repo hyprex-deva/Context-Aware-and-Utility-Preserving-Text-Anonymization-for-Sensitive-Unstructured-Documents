@@ -25,7 +25,7 @@ Raw Unstructured Text
        ▼ [Stage 1 Output: Realistic Surrogates]
 ┌────────────────────────────────────────────────────────────────────────┐
 │ STAGE 2: Semantic Reasoning & Quasi-Identifier Generalization          │
-│  ├─ SLM Reasoner (Hugging Face / Ollama / Heuristic Rule Reasoner)     │
+│  ├─ Local Quantized SLM: Ollama (qwen2.5:0.5b)                        │
 │  ├─ Hierarchical Coarsening of Rare Roles, Dates, & Event Combinations │
 │  └─ Semantic Drift Guardrail (SentenceTransformers all-MiniLM-L6-v2)  │
 │        ├─ Cosine Sim >= 0.80 ➔ ACCEPT Generalized Text                 │
