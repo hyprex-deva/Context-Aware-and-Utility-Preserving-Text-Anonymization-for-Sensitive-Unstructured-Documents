@@ -135,11 +135,14 @@ def get_stage1_anonymizer() -> DirectPIIAnonymizer:
 
 
 @st.cache_resource
-def get_stage2_defense(threshold: float = 0.80) -> SemanticQuasiIdentifierDefense:
+def get_stage2_defense(
+    ollama_model: str = "qwen2.5:1.5b", threshold: float = 0.80
+) -> SemanticQuasiIdentifierDefense:
     return SemanticQuasiIdentifierDefense(
-        ollama_model="qwen2.5:0.5b",
+        ollama_model=ollama_model,
         similarity_threshold=threshold,
     )
+
 
 
 
@@ -244,7 +247,12 @@ def main():
 
         st.divider()
         st.subheader("Stage 2 Reasoning Engine")
-        st.info("🦙 **Ollama SLM**: `qwen2.5:0.5b`")
+        ollama_model_choice = st.selectbox(
+            "🦙 Ollama Model",
+            ["qwen2.5:1.5b", "qwen2.5:0.5b"],
+            index=0,
+            help="qwen2.5:1.5b has strong instruction-following reasoning to generalize dates/amounts/roles. qwen2.5:0.5b is ultra-lightweight.",
+        )
         
         sim_threshold = st.slider(
             "Semantic Drift Threshold (Cosine Sim)",
@@ -285,9 +293,13 @@ def main():
 
     if sanitize_btn or input_text:
         # Load pipelines
-        with st.spinner("Processing through Two-Stage Anonymization Architecture (Ollama qwen2.5:0.5b)..."):
+        with st.spinner(f"Processing through Two-Stage Anonymization Architecture (Ollama {ollama_model_choice})..."):
             stage1_engine = get_stage1_anonymizer()
-            stage2_engine = get_stage2_defense(threshold=sim_threshold)
+            stage2_engine = get_stage2_defense(
+                ollama_model=ollama_model_choice,
+                threshold=sim_threshold,
+            )
+
             presidio_engine = get_presidio_baseline()
             redacted_engine = get_redacted_baseline()
 

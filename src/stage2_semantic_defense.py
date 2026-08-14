@@ -25,34 +25,29 @@ logger = logging.getLogger("Stage2SemanticDefense")
 
 class SemanticQuasiIdentifierDefense:
     """
-    Stage 2 Contextual Quasi-Identifier Generalizer powered by local Ollama (qwen2.5:0.5b)
+    Stage 2 Contextual Quasi-Identifier Generalizer powered by local Ollama (qwen2.5:1.5b / qwen2.5:0.5b)
     and guarded by SentenceTransformers (all-MiniLM-L6-v2) semantic drift verification.
     """
 
     SIMILARITY_THRESHOLD = 0.80
 
-    # Structured prompt for Qwen2.5-0.5B JSON quasi-identifier generalization
-    SYSTEM_PROMPT = """You are an expert Privacy-Preserving NLP Engine.
-Your task is to identify and hierarchically generalize high-risk CONTEXTUAL QUASI-IDENTIFIERS in text that has already undergone direct PII anonymization in Stage 1.
+    # Structured prompt for Qwen2.5 JSON quasi-identifier generalization
+    SYSTEM_PROMPT = """You are a privacy-preserving text generalizer.
+Your goal is to REWRITE the input document by replacing and generalizing contextual quasi-identifiers into broader categories:
+- Coarsen exact dollar amounts (e.g. "$45,000" -> "a five-figure wire transfer", "$25" -> "a standard service charge").
+- Coarsen exact dates (e.g. "2024-03-15" -> "in early 2024", "on August 14, 2023" -> "in late summer 2023").
+- Coarsen hyper-specific job titles or rare specialties (e.g. "Senior Wealth Manager" -> "financial advisory staff", "sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors" -> "Senior Medical Specialist").
+- Coarsen birth dates or age markers (e.g. "DOB: 12/04/1982" -> "in their early 40s").
+- Preserve synthetic names, emails, and organizations created in Stage 1.
 
-Quasi-identifiers to generalize:
-- Hyper-specific or unique job titles (e.g., "sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors" -> "Senior Medical Specialist")
-- Specific combined dates or birth dates (e.g., "DOB: 12/04/1982" -> "in their early 40s", "on August 14, 2023" -> "in recent months")
-- Hyper-specific rare accomplishments/events (e.g., "only employee holding 4 patents in topological quantum gates" -> "a specialized researcher with multiple domain patents")
-- Exact high monetary amounts or account specifics (e.g., "$45,000" -> "a substantial commercial fund")
-- Specific customer dispute or infrastructure details that could re-identify someone through background knowledge.
-
-Rules:
-1. Preserve all synthetic names, places, and organizations created in Stage 1.
-2. Maintain complete grammatical fluency, sentence structure, and core semantic meaning.
-3. Output your response strictly as a JSON object with keys:
-   - "generalized_text": string containing the rewritten, privacy-safe text.
-   - "modifications": list of objects [{"original_span": "...", "generalized_span": "...", "reason": "..."}]
+You MUST return a valid JSON object strictly with keys:
+"generalized_text": "the rewritten text with coarsened numbers/dates/titles",
+"modifications": [{"original_span": "...", "generalized_span": "...", "reason": "..."}]
 """
 
     def __init__(
         self,
-        ollama_model: str = "qwen2.5:0.5b",
+        ollama_model: str = "qwen2.5:1.5b",
         ollama_url: str = "http://localhost:11434",
         embedder_model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
         similarity_threshold: float = 0.80,
@@ -62,7 +57,7 @@ Rules:
         Initialize Stage 2 LLM Semantic Defense Engine.
 
         Args:
-            ollama_model: Local Ollama model tag (default: "qwen2.5:0.5b").
+            ollama_model: Local Ollama model tag (default: "qwen2.5:1.5b", fallback: "qwen2.5:0.5b").
             ollama_url: Base endpoint URL for Ollama.
             embedder_model_name: SentenceTransformers model for semantic drift check.
             similarity_threshold: Minimum cosine similarity required to accept generalized text.
@@ -75,6 +70,7 @@ Rules:
         self._embedder = None
 
         self._init_embedder(embedder_model_name)
+
 
     def _init_embedder(self, model_name: str) -> None:
         """Initialize SentenceTransformer embedding model for semantic drift verification."""
@@ -147,7 +143,7 @@ Rules:
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json=payload,
-                timeout=45,
+                timeout=60,
             )
             if response.status_code == 200:
                 data = response.json()
@@ -178,6 +174,18 @@ Rules:
             logger.warning(f"Ollama returned non-200 status code: {response.status_code}")
         except Exception as exc:
             logger.error(f"Failed to query Ollama ({self.ollama_model}): {exc}")
+            # Fallback to 0.5b if 1.5b failed
+            if self.ollama_model != "qwen2.5:0.5b":
+                try:
+                    logger.info("Retrying with qwen2.5:0.5b...")
+                    payload["model"] = "qwen2.5:0.5b"
+                    res2 = requests.post(f"{self.ollama_url}/api/generate", json=payload, timeout=30)
+                    if res2.status_code == 200:
+                        parsed2 = json.loads(res2.json().get("response", "{}"))
+                        return parsed2.get("generalized_text", stage1_text), parsed2.get("modifications", [])
+                except Exception:
+                    pass
+
 
         return stage1_text, []
 
