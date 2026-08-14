@@ -263,7 +263,7 @@ Rules:
             logger.info(f"Loading HF SLM pipeline for generalization: {self.hf_model_name}...")
             tokenizer = AutoTokenizer.from_pretrained(self.hf_model_name)
             
-            # Safe device allocation (default CPU for lightweight stability)
+            # Safe device allocation (force CPU device=-1 to avoid CUDA kernel mismatches)
             model = AutoModelForCausalLM.from_pretrained(
                 self.hf_model_name,
                 torch_dtype=torch.float32,
@@ -273,14 +273,16 @@ Rules:
                 "text-generation",
                 model=model,
                 tokenizer=tokenizer,
+                device=-1,
                 max_new_tokens=512,
                 temperature=0.1,
                 do_sample=False,
             )
-            logger.info(f"HF SLM Pipeline '{self.hf_model_name}' loaded successfully.")
+            logger.info(f"HF SLM Pipeline '{self.hf_model_name}' loaded successfully on CPU.")
         except Exception as exc:
             logger.warning(f"Could not load HF model '{self.hf_model_name}' ({exc}). Falling back to heuristic mode.")
             self.backend = "heuristic"
+
 
     def compute_similarity(self, text_a: str, text_b: str) -> float:
         """
