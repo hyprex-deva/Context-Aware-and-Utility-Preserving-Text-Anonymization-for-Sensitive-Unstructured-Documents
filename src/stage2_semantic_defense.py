@@ -1,8 +1,8 @@
 """
-Stage 2: Semantic Reasoning & Quasi-Identifier Generalization using Local SLM (Ollama qwen2.5:0.5b).
+Stage 2: Semantic Reasoning & Quasi-Identifier Generalization using Local SLM (Ollama qwen2.5:1.5b).
 
 This module inspects the Stage 1 sanitized text using the local quantized Small Language Model
-`qwen2.5:0.5b` via Ollama. It identifies contextual quasi-identifiers (rare job titles,
+`qwen2.5:1.5b` via Ollama. It identifies contextual quasi-identifiers (rare job titles,
 demographic outliers, hyper-specific dates/events, and financial specifics) and generalizes them
 hierarchically. A SentenceTransformers embedding guardrail (all-MiniLM-L6-v2) verifies that
 semantic cosine similarity remains >= 0.80 to guarantee preservation of document utility.
@@ -25,7 +25,7 @@ logger = logging.getLogger("Stage2SemanticDefense")
 
 class SemanticQuasiIdentifierDefense:
     """
-    Stage 2 Contextual Quasi-Identifier Generalizer powered by local Ollama (qwen2.5:1.5b / qwen2.5:0.5b)
+    Stage 2 Contextual Quasi-Identifier Generalizer powered by local Ollama (qwen2.5:1.5b)
     and guarded by SentenceTransformers (all-MiniLM-L6-v2) semantic drift verification.
     """
 
@@ -57,7 +57,7 @@ You MUST return a valid JSON object strictly with keys:
         Initialize Stage 2 LLM Semantic Defense Engine.
 
         Args:
-            ollama_model: Local Ollama model tag (default: "qwen2.5:1.5b", fallback: "qwen2.5:0.5b").
+            ollama_model: Local Ollama model tag (default: "qwen2.5:1.5b").
             ollama_url: Base endpoint URL for Ollama.
             embedder_model_name: SentenceTransformers model for semantic drift check.
             similarity_threshold: Minimum cosine similarity required to accept generalized text.
@@ -68,6 +68,7 @@ You MUST return a valid JSON object strictly with keys:
         self.similarity_threshold = similarity_threshold
         self.device = device
         self._embedder = None
+
 
         self._init_embedder(embedder_model_name)
 
@@ -121,7 +122,7 @@ You MUST return a valid JSON object strictly with keys:
 
     def _query_ollama(self, stage1_text: str) -> Tuple[str, List[Dict[str, str]]]:
         """
-        Query local Ollama server running qwen2.5:0.5b to perform LLM-driven
+        Query local Ollama server running qwen2.5:1.5b to perform LLM-driven
         hierarchical quasi-identifier generalization and contextual rephrasing.
         """
         prompt = (
@@ -181,7 +182,7 @@ You MUST return a valid JSON object strictly with keys:
         self, stage1_text: str, original_text: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Execute Stage 2 semantic reasoning via Ollama LLM (qwen2.5:0.5b),
+        Execute Stage 2 semantic reasoning via Ollama LLM (qwen2.5:1.5b),
         apply hierarchical quasi-identifier generalization, and verify
         semantic drift using the cosine similarity guardrail.
 
@@ -196,7 +197,7 @@ You MUST return a valid JSON object strictly with keys:
             - 'similarity_score': Cosine similarity float between Stage 1 and Stage 2 candidate.
             - 'drift_passed': Boolean (similarity >= threshold).
             - 'generalized_spans': List of modification metadata dicts.
-            - 'backend_used': "Ollama LLM (qwen2.5:0.5b)".
+            - 'backend_used': "Ollama LLM (qwen2.5:1.5b)".
         """
         if not stage1_text or not stage1_text.strip():
             return {
@@ -207,6 +208,7 @@ You MUST return a valid JSON object strictly with keys:
                 "generalized_spans": [],
                 "backend_used": f"Ollama LLM ({self.ollama_model})",
             }
+
 
         # Step 1: Query Ollama LLM
         candidate_text, mods = self._query_ollama(stage1_text)

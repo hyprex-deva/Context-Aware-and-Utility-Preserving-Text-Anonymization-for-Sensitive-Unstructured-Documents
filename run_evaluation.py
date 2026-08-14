@@ -74,9 +74,10 @@ def load_benchmark_data(data_path: str, max_samples: int = 10) -> List[Dict[str,
 def run_benchmark(
     samples: List[Dict[str, Any]],
     output_dir: str = "data",
-    ollama_model: str = "qwen2.5:0.5b",
+    ollama_model: str = "qwen2.5:1.5b",
     compute_heavy_metrics: bool = True,
 ) -> pd.DataFrame:
+
     """
     Execute end-to-end evaluation across all models and baseline systems.
     """
