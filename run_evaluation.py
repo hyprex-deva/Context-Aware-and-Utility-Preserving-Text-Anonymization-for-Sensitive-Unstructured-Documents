@@ -42,15 +42,18 @@ def load_benchmark_data(data_path: str, max_samples: int = 10) -> List[Dict[str,
         try:
             with open(data_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                logger.info(f"Loaded {len(data[:max_samples])} benchmark samples from '{data_path}' (ai4privacy/pii-masking-300k).")
-                return data[:max_samples]
+                if len(data) >= max_samples:
+                    logger.info(f"Loaded {len(data[:max_samples])} benchmark samples from '{data_path}' (ai4privacy/pii-masking-300k).")
+                    return data[:max_samples]
+                else:
+                    logger.info(f"Local file '{data_path}' has {len(data)} samples, but {max_samples} requested. Fetching from Hugging Face dataset...")
         except Exception as exc:
             logger.error(f"Error loading benchmark dataset from {data_path}: {exc}")
 
     try:
         from datasets import load_dataset
-        logger.info("Streaming benchmark samples from Hugging Face: 'ai4privacy/pii-masking-300k'...")
-        ds = load_dataset("ai4privacy/pii-masking-300k", split="train", streaming=True)
+        logger.info(f"Loading {max_samples} benchmark samples from Hugging Face: 'ai4privacy/pii-masking-300k'...")
+        ds = load_dataset("ai4privacy/pii-masking-300k", split="train")
         samples = []
         for i, item in enumerate(ds):
             if len(samples) >= max_samples:
@@ -65,9 +68,10 @@ def load_benchmark_data(data_path: str, max_samples: int = 10) -> List[Dict[str,
                     "direct_pii": direct_pii,
                     "target_text": item.get("target_text", ""),
                 })
+        logger.info(f"Successfully prepared {len(samples)} English benchmark samples.")
         return samples
     except Exception as exc:
-        logger.warning(f"Could not stream Hugging Face dataset ({exc}).")
+        logger.warning(f"Could not load Hugging Face dataset ({exc}).")
         return []
 
 
@@ -150,7 +154,7 @@ def run_benchmark(
     outputs["Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)"]["drift_passes"] = drift_pass_count
 
     # Compute Evaluation Metrics
-    logger.info("Computing Privacy, Utility (ROUGE-L, Cosine Sim, BERTScore) metrics...")
+    logger.info("Computing Privacy, Utility (BLEU-4, ROUGE-L, Cosine Sim, BERTScore) metrics...")
     summary_rows = []
 
     for system_name, data in outputs.items():
@@ -167,6 +171,7 @@ def run_benchmark(
             "Privacy Precision": metrics.get("privacy_precision", 1.0),
             "Privacy Recall": metrics.get("privacy_recall", 1.0),
             "Privacy F1": metrics.get("privacy_f1", 1.0),
+            "BLEU-4": metrics.get("bleu_score", 0.0),
             "ROUGE-L F1": metrics.get("rougeL_f1", 0.0),
             "Semantic Cosine Sim": metrics.get("cosine_similarity", 0.0),
             "BERTScore F1": metrics.get("bertscore_f1", metrics.get("cosine_similarity", 0.0)),

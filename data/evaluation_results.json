@@ -1,42 +1,46 @@
 [
   {
     "Method / Architecture": "Baseline: Rigid Redaction ([REDACTED])",
-    "Privacy Precision": 0.7525,
-    "Privacy Recall": 0.95,
-    "Privacy F1": 0.8398,
-    "ROUGE-L F1": 0.6571,
-    "Semantic Cosine Sim": 0.5646,
-    "BERTScore F1": 0.795,
-    "Latency (sec)": 1.359
+    "Privacy Precision": 0.7874,
+    "Privacy Recall": 0.5427,
+    "Privacy F1": 0.6425,
+    "BLEU-4": 0.756,
+    "ROUGE-L F1": 0.8753,
+    "Semantic Cosine Sim": 0.8642,
+    "BERTScore F1": 0.9356,
+    "Latency (sec)": 42.211
   },
   {
     "Method / Architecture": "Baseline: Microsoft Presidio (<TAGS>)",
-    "Privacy Precision": 0.6226,
-    "Privacy Recall": 0.825,
-    "Privacy F1": 0.7097,
-    "ROUGE-L F1": 0.6807,
-    "Semantic Cosine Sim": 0.8098,
-    "BERTScore F1": 0.832,
-    "Latency (sec)": 0.475
+    "Privacy Precision": 0.5405,
+    "Privacy Recall": 0.4831,
+    "Privacy F1": 0.5102,
+    "BLEU-4": 0.7858,
+    "ROUGE-L F1": 0.8764,
+    "Semantic Cosine Sim": 0.9337,
+    "BERTScore F1": 0.9512,
+    "Latency (sec)": 7.883
   },
   {
     "Method / Architecture": "Proposed: Stage 1 (Direct PII + Surrogates)",
-    "Privacy Precision": 0.7822,
-    "Privacy Recall": 0.9875,
-    "Privacy F1": 0.8729,
-    "ROUGE-L F1": 0.5869,
-    "Semantic Cosine Sim": 0.6129,
-    "BERTScore F1": 0.8838,
-    "Latency (sec)": 1.363
+    "Privacy Precision": 0.7897,
+    "Privacy Recall": 0.5443,
+    "Privacy F1": 0.6444,
+    "BLEU-4": 0.7429,
+    "ROUGE-L F1": 0.8483,
+    "Semantic Cosine Sim": 0.9017,
+    "BERTScore F1": 0.9592,
+    "Latency (sec)": 43.398
   },
   {
     "Method / Architecture": "Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)",
-    "Privacy Precision": 0.7822,
-    "Privacy Recall": 0.9875,
-    "Privacy F1": 0.8729,
-    "ROUGE-L F1": 0.5869,
-    "Semantic Cosine Sim": 0.6129,
-    "BERTScore F1": 0.8838,
-    "Latency (sec)": 0.507
+    "Privacy Precision": 0.7897,
+    "Privacy Recall": 0.5443,
+    "Privacy F1": 0.6444,
+    "BLEU-4": 0.6411,
+    "ROUGE-L F1": 0.7848,
+    "Semantic Cosine Sim": 0.8758,
+    "BERTScore F1": 0.9416,
+    "Latency (sec)": 4008.921
   }
 ]

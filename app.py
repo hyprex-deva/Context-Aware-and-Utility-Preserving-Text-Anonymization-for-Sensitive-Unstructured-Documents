@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.stage1_direct_pii import DirectPIIAnonymizer
 from src.stage2_semantic_defense import SemanticQuasiIdentifierDefense
 from src.baselines import BaselinePresidio, BaselineRedacted
-from src.evaluate_metrics import compute_rouge_l_scores
+from src.evaluate_metrics import compute_bleu_scores, compute_rouge_l_scores
 
 # Configure Streamlit page
 st.set_page_config(
@@ -463,9 +463,11 @@ def main():
 
 
             with tab3:
-                m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+                m_col1, m_col2, m_col3, m_col4, m_col5 = st.columns(5)
                 r_s1 = compute_rouge_l_scores([input_text], [s1_result["sanitized_text"]])["rougeL_f1"]
                 r_s2 = compute_rouge_l_scores([input_text], [s2_result["final_text"]])["rougeL_f1"]
+                b_s1 = compute_bleu_scores([input_text], [s1_result["sanitized_text"]])["bleu_score"]
+                b_s2 = compute_bleu_scores([input_text], [s2_result["final_text"]])["bleu_score"]
 
                 with m_col1:
                     st.metric("Direct Entities Masked", len(s1_result["detected_entities"]))
@@ -474,7 +476,9 @@ def main():
                 with m_col3:
                     st.metric("Stage 2 ROUGE-L", f"{r_s2:.4f}")
                 with m_col4:
-                    st.metric("MiniLM Cosine Similarity", f"{s2_result['similarity_score']:.4f}")
+                    st.metric("Stage 2 BLEU-4", f"{b_s2:.4f}")
+                with m_col5:
+                    st.metric("MiniLM Cosine Sim", f"{s2_result['similarity_score']:.4f}")
 
 
 if __name__ == "__main__":

@@ -52,7 +52,7 @@ context-aware-pii-masking/
 │   ├── stage1_direct_pii.py        # Stage 1: Regex + Transformer NER + Faker
 │   ├── stage2_semantic_defense.py  # Stage 2: SLM Reasoning + MiniLM Drift Guardrail
 │   ├── baselines.py                # Microsoft Presidio & Rigid Redaction baselines
-│   └── evaluate_metrics.py         # Privacy F1, ROUGE-L, BERTScore & Cosine Sim
+│   └── evaluate_metrics.py         # Privacy F1, BLEU-4, ROUGE-L, BERTScore & Cosine Sim
 ├── tests/
 │   └── test_anonymization.py       # Unit and integration test suite
 ├── app.py                          # Modern Streamlit interactive UI dashboard

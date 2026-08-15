@@ -15,6 +15,7 @@ from src.stage1_direct_pii import DirectPIIAnonymizer
 from src.stage2_semantic_defense import SemanticQuasiIdentifierDefense
 from src.baselines import BaselinePresidio, BaselineRedacted
 from src.evaluate_metrics import (
+    compute_bleu_scores,
     compute_privacy_metrics,
     compute_rouge_l_scores,
     evaluate_anonymization_system,
@@ -140,6 +141,12 @@ class TestEvaluationMetrics(unittest.TestCase):
         sanit = ["The quick brown fox jumps over a lazy cat."]
         rouge = compute_rouge_l_scores(orig, sanit)
         self.assertGreater(rouge["rougeL_f1"], 0.6)
+
+    def test_bleu_scores(self):
+        orig = ["The quick brown fox jumps over the lazy dog."]
+        sanit = ["The quick brown fox jumps over a lazy dog."]
+        bleu = compute_bleu_scores(orig, sanit)
+        self.assertGreater(bleu["bleu_score"], 0.5)
 
 
 if __name__ == "__main__":

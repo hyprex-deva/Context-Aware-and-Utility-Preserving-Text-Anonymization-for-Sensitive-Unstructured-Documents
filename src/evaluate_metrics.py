@@ -138,6 +138,48 @@ def compute_rouge_l_scores(
     return {"rougeL_f1": round(avg_rouge, 4)}
 
 
+def compute_bleu_scores(
+    original_texts: List[str],
+    sanitized_texts: List[str],
+    n_gram: int = 4,
+) -> Dict[str, float]:
+    """
+    Compute average BLEU-4 score (cumulative n-gram precision with brevity penalty)
+    comparing sanitized texts against reference original texts.
+    """
+    if not original_texts or not sanitized_texts:
+        return {"bleu_score": 0.0}
+
+    scores = []
+    try:
+        from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+        smooth = SmoothingFunction().method1
+        weights = tuple([1.0 / n_gram] * n_gram)
+
+        for orig, sanit in zip(original_texts, sanitized_texts):
+            ref_tokens = re.findall(r"\w+", orig.lower())
+            hyp_tokens = re.findall(r"\w+", sanit.lower())
+            if not ref_tokens or not hyp_tokens:
+                scores.append(0.0)
+                continue
+            score = sentence_bleu([ref_tokens], hyp_tokens, weights=weights, smoothing_function=smooth)
+            scores.append(score)
+    except Exception as exc:
+        logger.warning(f"NLTK sentence_bleu fallback: {exc}")
+        for orig, sanit in zip(original_texts, sanitized_texts):
+            ref_tokens = re.findall(r"\w+", orig.lower())
+            hyp_tokens = re.findall(r"\w+", sanit.lower())
+            if not ref_tokens or not hyp_tokens:
+                scores.append(0.0)
+                continue
+            matches = sum(1 for tok in hyp_tokens if tok in ref_tokens)
+            prec = matches / len(hyp_tokens) if hyp_tokens else 0.0
+            scores.append(prec)
+
+    avg_bleu = float(np.mean(scores)) if scores else 0.0
+    return {"bleu_score": round(avg_bleu, 4)}
+
+
 def compute_bert_scores(
     original_texts: List[str],
     sanitized_texts: List[str],
@@ -229,6 +271,9 @@ def evaluate_anonymization_system(
     # 2. Utility Metrics
     rouge_res = compute_rouge_l_scores(original_texts, sanitized_texts)
     results.update(rouge_res)
+
+    bleu_res = compute_bleu_scores(original_texts, sanitized_texts)
+    results.update(bleu_res)
 
     sim_res = compute_semantic_similarities(original_texts, sanitized_texts)
     results.update(sim_res)
