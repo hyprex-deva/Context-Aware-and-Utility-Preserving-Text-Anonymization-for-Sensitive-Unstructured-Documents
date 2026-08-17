@@ -7,12 +7,20 @@ demographic outliers, hyper-specific dates/events, and financial specifics) and 
 hierarchically.
 
 A multi-criteria composite decision engine evaluates candidate rewrites across:
-1. Semantic Similarity (S_semantic) via SentenceTransformers (all-MiniLM-L6-v2) cosine similarity.
-2. Privacy Risk Reduction (S_privacy) measuring removal/abstraction of flagged quasi-identifier spans.
-3. Readability & Fluency (S_readability) evaluating length ratio consistency and structural integrity.
+1. Semantic Similarity (S_semantic): SentenceTransformers (all-MiniLM-L6-v2) cosine similarity.
+2. Quasi-Identifier Abstraction Score (S_qi_abstraction): Evaluates residual risk across
+   SLM-independently detected single and compound quasi-identifiers (dates, money, rare roles, demographics, locations).
+3. Readability & Text Integrity (S_readability): Length-ratio factor and syntactic consistency.
 
-Candidate rewrites are accepted if S_composite >= tau (default: 0.72) AND S_semantic >= floor_sim
-(hard safety floor, default: 0.60), falling back to Stage 1 text otherwise.
+Three-Way Safety Guardrail Acceptance Rule:
+    Candidate rewrite is accepted iff:
+        S_composite >= tau (default: 0.72)
+        AND S_semantic >= floor_sim (default: 0.60)
+        AND S_qi_abstraction >= qi_floor (default: 0.50)
+    Fails back safely to Stage 1 text if any condition is violated.
+
+NOTE: All thresholds and weights are provisional development defaults intended for
+subsequent experimental validation/tuning.
 """
 
 from __future__ import annotations
@@ -25,6 +33,8 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import requests
 
+from src.quasi_identifier_detector import QuasiIdentifierDetector
+
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("Stage2SemanticDefense")
@@ -33,15 +43,17 @@ logger = logging.getLogger("Stage2SemanticDefense")
 class SemanticQuasiIdentifierDefense:
     """
     Stage 2 Contextual Quasi-Identifier Generalizer powered by local Ollama (qwen2.5:1.5b)
-    and guarded by a Multi-Criteria Composite Decision Engine:
+    and guarded by an SLM-Independent Deterministic Multi-Criteria Composite Decision Engine:
     - S_semantic: SentenceTransformers (all-MiniLM-L6-v2) embedding similarity
-    - S_privacy: Quasi-identifier span elimination and abstraction verification
+    - S_qi_abstraction: Deterministic quasi-identifier abstraction and residual risk evaluation
     - S_readability: Length ratio and syntactic/punctuation structural consistency
     """
 
+    # Provisional development defaults (to be tuned experimentally on validation datasets)
     DEFAULT_TAU = 0.72
     DEFAULT_FLOOR_SIM = 0.60
-    DEFAULT_WEIGHTS = {"sim": 0.50, "priv": 0.30, "read": 0.20}
+    DEFAULT_QI_FLOOR = 0.50
+    DEFAULT_WEIGHTS = {"sim": 0.50, "qi": 0.30, "read": 0.20}
 
     # Structured prompt for Qwen2.5 JSON quasi-identifier generalization
     SYSTEM_PROMPT = """You are a privacy-preserving text generalizer.
@@ -62,24 +74,34 @@ You MUST return a valid JSON object strictly with keys:
         ollama_model: str = "qwen2.5:1.5b",
         ollama_url: str = "http://localhost:11434",
         embedder_model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
-        tau: float = 0.72,
-        floor_sim: float = 0.60,
+        tau: float = DEFAULT_TAU,
+        floor_sim: float = DEFAULT_FLOOR_SIM,
+        qi_floor: float = DEFAULT_QI_FLOOR,
         weights: Optional[Dict[str, float]] = None,
         similarity_threshold: Optional[float] = None,
+        qi_detector: Optional[QuasiIdentifierDetector] = None,
+        mitigation_threshold: float = 0.10,
+        exposure_threshold: float = 0.90,
+        compound_alpha: float = 0.40,
         device: str = "cpu",
         request_timeout: int = 15,
     ) -> None:
         """
-        Initialize Stage 2 LLM Semantic Defense Engine with Composite Guardrail.
+        Initialize Stage 2 LLM Semantic Defense Engine with Independent QI Guardrail.
 
         Args:
             ollama_model: Local Ollama model tag (default: "qwen2.5:1.5b").
             ollama_url: Base endpoint URL for Ollama.
             embedder_model_name: SentenceTransformers model for semantic drift check.
-            tau: Minimum composite score required to accept candidate rewrite (default: 0.72).
-            floor_sim: Hard semantic similarity floor required regardless of composite score (default: 0.60).
-            weights: Weight dictionary for criteria {"sim": w_sim, "priv": w_priv, "read": w_read}.
+            tau: Minimum composite score required to accept candidate rewrite (provisional default: 0.72).
+            floor_sim: Hard semantic similarity floor required regardless of composite score (provisional default: 0.60).
+            qi_floor: Hard QI abstraction floor required regardless of composite score (provisional default: 0.50).
+            weights: Weight dictionary for criteria {"sim": w_sim, "qi": w_qi, "read": w_read}.
             similarity_threshold: Backward-compatibility alias for tau.
+            qi_detector: Optional custom QuasiIdentifierDetector instance.
+            mitigation_threshold: Configurable residual risk threshold for 'mitigated' status (default: 0.10).
+            exposure_threshold: Configurable residual risk threshold for 'exposed' status (default: 0.90).
+            compound_alpha: Conservative weighting factor for compound QI residual risk (default: 0.40).
             device: Computing device for embedder ("cpu" or "cuda").
             request_timeout: HTTP request timeout in seconds for Ollama calls.
         """
@@ -87,10 +109,17 @@ You MUST return a valid JSON object strictly with keys:
         self.ollama_url = ollama_url
         self.tau = similarity_threshold if similarity_threshold is not None else tau
         self.floor_sim = floor_sim
+        self.qi_floor = qi_floor
         self.weights = self._normalize_weights(weights or self.DEFAULT_WEIGHTS)
         self.device = device
         self.request_timeout = request_timeout
         self._embedder = None
+
+        self.qi_detector = qi_detector or QuasiIdentifierDetector(
+            mitigation_threshold=mitigation_threshold,
+            exposure_threshold=exposure_threshold,
+            compound_alpha=compound_alpha,
+        )
 
         self._init_embedder(embedder_model_name)
 
@@ -106,16 +135,17 @@ You MUST return a valid JSON object strictly with keys:
 
     @staticmethod
     def _normalize_weights(weights: Dict[str, float]) -> Dict[str, float]:
-        """Ensure weights are non-negative and sum to 1.0."""
+        """Ensure weights are non-negative and sum to 1.0 (with backward compatibility for 'priv' key)."""
         w_sim = max(0.0, float(weights.get("sim", 0.50)))
-        w_priv = max(0.0, float(weights.get("priv", 0.30)))
+        # Support 'qi' or legacy 'priv' key
+        w_qi = max(0.0, float(weights.get("qi", weights.get("priv", 0.30))))
         w_read = max(0.0, float(weights.get("read", 0.20)))
-        total = w_sim + w_priv + w_read
+        total = w_sim + w_qi + w_read
         if total <= 0.0:
-            return {"sim": 0.50, "priv": 0.30, "read": 0.20}
+            return {"sim": 0.50, "qi": 0.30, "read": 0.20}
         return {
             "sim": round(w_sim / total, 4),
-            "priv": round(w_priv / total, 4),
+            "qi": round(w_qi / total, 4),
             "read": round(w_read / total, 4),
         }
 
@@ -182,30 +212,76 @@ You MUST return a valid JSON object strictly with keys:
 
         return float(np.clip(0.60 * word_dice + 0.40 * tri_dice, 0.0, 1.0))
 
+    def compute_qi_abstraction(
+        self,
+        stage1_text: str,
+        candidate_text: str,
+    ) -> Tuple[float, List[Dict[str, Any]]]:
+        """
+        Compute Quasi-Identifier Abstraction Score (S_qi_abstraction) using the
+        SLM-Independent Deterministic QI Detection Layer.
+
+        Evaluates per-QI residual risk across single and compound QIs in candidate_text.
+
+        Formula:
+            S_qi_abstraction = 1.0 - (sum(w_i * r_i) / sum(w_i))
+
+        If no QIs are detected in stage1_text, defaults to 1.0.
+
+        Args:
+            stage1_text: Output text from Stage 1 (reference input to Stage 2).
+            candidate_text: Candidate rewrite proposed by the SLM.
+
+        Returns:
+            Tuple of (qi_abstraction_score: float, qi_evaluations: List[Dict[str, Any]]).
+        """
+        if not stage1_text or not stage1_text.strip():
+            return 1.0, []
+
+        # 1. Independent Deterministic QI Detection on Stage 1 text
+        detected_qis = self.qi_detector.detect_quasi_identifiers(stage1_text)
+
+        if not detected_qis:
+            # If no quasi-identifiers were independently detected, default S_qi_abstraction = 1.0
+            return 1.0, []
+
+        # 2. Evaluate residual risk per detected QI
+        evaluations: List[Dict[str, Any]] = []
+        total_weighted_risk = 0.0
+        total_weight = 0.0
+
+        for qi in detected_qis:
+            eval_res = self.qi_detector.evaluate_qi_mitigation(qi, candidate_text)
+            evaluations.append(eval_res)
+
+            weight = qi.get("risk_level", 1.0)
+            residual_risk = eval_res.get("residual_risk", 0.0)
+
+            total_weighted_risk += weight * residual_risk
+            total_weight += weight
+
+        # 3. Compute weighted abstraction score
+        if total_weight > 0:
+            qi_score = 1.0 - (total_weighted_risk / total_weight)
+        else:
+            qi_score = 1.0
+
+        qi_score = float(np.clip(qi_score, 0.0, 1.0))
+        return round(qi_score, 4), evaluations
+
     def compute_privacy_reduction(
         self, candidate_text: str, modifications: List[Dict[str, Any]]
     ) -> float:
         """
-        Compute Privacy Risk Reduction metric (S_privacy).
-
-        Measures how effectively flagged high-risk quasi-identifier spans were
-        eliminated or abstracted away in candidate_text.
-
-        Args:
-            candidate_text: Candidate rewrite text from the SLM.
-            modifications: List of quasi-identifier modification dicts or strings from SLM.
-
-        Returns:
-            Privacy reduction score in range [0.0, 1.0].
+        Backward-compatibility helper evaluating SLM modifications list.
+        Note: The guardrail's authoritative score is compute_qi_abstraction.
         """
         if not modifications:
-            # If no quasi-identifiers were flagged by the SLM, default S_privacy = 1.0
             return 1.0
 
         flagged_phrases: List[str] = []
         for m in modifications:
             if isinstance(m, dict):
-                # Extract original span from common potential keys
                 span = (
                     m.get("original_span")
                     or m.get("original")
@@ -225,7 +301,6 @@ You MUST return a valid JSON object strictly with keys:
         unabstracted_count = 0
 
         for phrase in flagged_phrases:
-            # Check if flagged original phrase is still present (case-insensitive substring match)
             if phrase.lower() in candidate_lower:
                 unabstracted_count += 1
 
@@ -235,7 +310,7 @@ You MUST return a valid JSON object strictly with keys:
 
     def compute_readability_score(self, original_text: str, candidate_text: str) -> float:
         """
-        Compute Readability & Structural Consistency metric (S_readability).
+        Compute Readability & Text Integrity metric (S_readability).
 
         Combines:
         1. Length Ratio Factor: Penalizes severe truncation or extreme hallucinated expansion.
@@ -264,12 +339,11 @@ You MUST return a valid JSON object strictly with keys:
 
         # 2. Syntactic / Punctuation Integrity Factor
         valid_terminals = {".", "!", "?", '"', "'", ")", "}", "]", "”", "’", "\n"}
-        
+
         # Sentence termination check
         termination_score = 1.0
         if orig_clean and orig_clean[-1] in {".", "!", "?"}:
             if cand_clean and cand_clean[-1] not in valid_terminals:
-                # Truncated or dangling token at end of sentence
                 termination_score = 0.5
             elif cand_clean and cand_clean[-1] in {",", ":", ";", "-", "—"}:
                 termination_score = 0.4
@@ -295,39 +369,47 @@ You MUST return a valid JSON object strictly with keys:
         self,
         stage1_text: str,
         candidate_text: str,
-        modifications: List[Dict[str, Any]],
+        modifications: Optional[List[Dict[str, Any]]] = None,
         tau: Optional[float] = None,
         floor_sim: Optional[float] = None,
+        qi_floor: Optional[float] = None,
         weights: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Any]:
         """
-        Evaluate candidate rewrite using the multi-criteria composite decision function.
+        Evaluate candidate rewrite using the multi-criteria composite decision function
+        with Three-Way Safety Guardrail enforcement.
 
         Composite Score:
-            S_composite = (w_sim * S_semantic) + (w_priv * S_privacy) + (w_read * S_readability)
+            S_composite = (w_sim * S_semantic) + (w_qi * S_qi_abstraction) + (w_read * S_readability)
 
-        Acceptance Rule:
-            ACCEPT if S_composite >= tau AND S_semantic >= floor_sim
+        Three-Way Acceptance Rule:
+            ACCEPT iff S_composite >= tau AND S_semantic >= floor_sim AND S_qi_abstraction >= qi_floor
             REJECT otherwise (fallback to Stage 1 text)
         """
         effective_tau = self.tau if tau is None else tau
         effective_floor = self.floor_sim if floor_sim is None else floor_sim
+        effective_qi_floor = self.qi_floor if qi_floor is None else qi_floor
         effective_weights = self._normalize_weights(weights) if weights else self.weights
+        mods = modifications or []
 
         # 1. Compute Individual Component Scores
         s_semantic = self.compute_similarity(stage1_text, candidate_text)
-        s_privacy = self.compute_privacy_reduction(candidate_text, modifications)
+        s_qi_abstraction, qi_analysis = self.compute_qi_abstraction(stage1_text, candidate_text)
         s_readability = self.compute_readability_score(stage1_text, candidate_text)
 
         # 2. Compute Weighted Composite Score
         w_sim = effective_weights["sim"]
-        w_priv = effective_weights["priv"]
+        w_qi = effective_weights["qi"]
         w_read = effective_weights["read"]
-        s_composite = (w_sim * s_semantic) + (w_priv * s_privacy) + (w_read * s_readability)
+        s_composite = (w_sim * s_semantic) + (w_qi * s_qi_abstraction) + (w_read * s_readability)
         s_composite = float(np.clip(s_composite, 0.0, 1.0))
 
-        # 3. Decision Rule
-        is_accepted = bool(s_composite >= effective_tau and s_semantic >= effective_floor)
+        # 3. Three-Way Guardrail Decision Rule
+        is_accepted = bool(
+            s_composite >= effective_tau
+            and s_semantic >= effective_floor
+            and s_qi_abstraction >= effective_qi_floor
+        )
         fallback_triggered = not is_accepted
 
         if is_accepted:
@@ -335,18 +417,21 @@ You MUST return a valid JSON object strictly with keys:
             logger.info(
                 f"Stage 2 Decision ACCEPTED: Composite={s_composite:.4f} >= {effective_tau:.2f} "
                 f"(Semantic={s_semantic:.4f} >= {effective_floor:.2f}, "
-                f"Privacy={s_privacy:.4f}, Readability={s_readability:.4f})"
+                f"QI-Abstraction={s_qi_abstraction:.4f} >= {effective_qi_floor:.2f}, "
+                f"Readability={s_readability:.4f})"
             )
         else:
             final_text = stage1_text
-            reason = (
-                f"Semantic {s_semantic:.4f} < floor {effective_floor:.2f}"
-                if s_semantic < effective_floor
-                else f"Composite {s_composite:.4f} < tau {effective_tau:.2f}"
-            )
+            reasons = []
+            if s_semantic < effective_floor:
+                reasons.append(f"Semantic {s_semantic:.4f} < floor {effective_floor:.2f}")
+            if s_qi_abstraction < effective_qi_floor:
+                reasons.append(f"QI-Abstraction {s_qi_abstraction:.4f} < floor {effective_qi_floor:.2f}")
+            if s_composite < effective_tau:
+                reasons.append(f"Composite {s_composite:.4f} < tau {effective_tau:.2f}")
             logger.warning(
-                f"Stage 2 Decision REJECTED ({reason}). "
-                "Retaining Stage 1 surrogate text to prevent utility degradation."
+                f"Stage 2 Decision REJECTED ({', '.join(reasons)}). "
+                "Retaining Stage 1 surrogate text to prevent privacy/utility degradation."
             )
 
         return {
@@ -357,19 +442,23 @@ You MUST return a valid JSON object strictly with keys:
             "composite_score": round(s_composite, 4),
             "metrics_breakdown": {
                 "semantic_similarity": round(s_semantic, 4),
-                "privacy_reduction_score": round(s_privacy, 4),
+                "qi_abstraction_score": round(s_qi_abstraction, 4),
                 "readability_score": round(s_readability, 4),
+                # Backward-compatibility alias
+                "privacy_reduction_score": round(s_qi_abstraction, 4),
             },
             "thresholds": {
                 "tau": effective_tau,
                 "floor_sim": effective_floor,
+                "qi_floor": effective_qi_floor,
                 "weights": effective_weights,
             },
-            "modifications": modifications,
+            "qi_analysis": qi_analysis,
+            "modifications": mods,
             # Backward-compatibility aliases
             "drift_passed": is_accepted,
             "similarity_score": round(s_semantic, 4),
-            "generalized_spans": modifications,
+            "generalized_spans": mods,
             "backend_used": f"Ollama LLM ({self.ollama_model})",
         }
 
@@ -438,48 +527,29 @@ You MUST return a valid JSON object strictly with keys:
         original_text: Optional[str] = None,
         tau: Optional[float] = None,
         floor_sim: Optional[float] = None,
+        qi_floor: Optional[float] = None,
         weights: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Any]:
         """
         Execute Stage 2 semantic reasoning via Ollama LLM (qwen2.5:1.5b),
         apply hierarchical quasi-identifier generalization, and verify candidate
-        rewrite with the multi-criteria composite decision guardrail.
+        rewrite with the independent multi-criteria composite decision guardrail.
 
         Args:
             stage1_text: Output text from Stage 1 (with synthetic surrogates).
             original_text: Optional original un-anonymized text.
             tau: Optional override for composite threshold.
             floor_sim: Optional override for hard semantic similarity floor.
-            weights: Optional override for component weights {"sim": ..., "priv": ..., "read": ...}.
+            qi_floor: Optional override for hard QI abstraction safety floor.
+            weights: Optional override for component weights {"sim": ..., "qi": ..., "read": ...}.
 
         Returns:
-            Structured dictionary with final text and detailed decision telemetry:
-            {
-                "final_text": str,
-                "is_accepted": bool,
-                "fallback_triggered": bool,
-                "composite_score": float,
-                "metrics_breakdown": {
-                    "semantic_similarity": float,
-                    "privacy_reduction_score": float,
-                    "readability_score": float,
-                },
-                "thresholds": {
-                    "tau": float,
-                    "floor_sim": float,
-                    "weights": {"sim": float, "priv": float, "read": float},
-                },
-                "modifications": list,
-                "candidate_text": str,
-                "similarity_score": float,
-                "drift_passed": bool,
-                "generalized_spans": list,
-                "backend_used": str,
-            }
+            Structured dictionary with final text and detailed decision telemetry.
         """
         if not stage1_text or not stage1_text.strip():
             effective_tau = self.tau if tau is None else tau
             effective_floor = self.floor_sim if floor_sim is None else floor_sim
+            effective_qi_floor = self.qi_floor if qi_floor is None else qi_floor
             effective_weights = self._normalize_weights(weights) if weights else self.weights
             return {
                 "final_text": stage1_text or "",
@@ -489,14 +559,17 @@ You MUST return a valid JSON object strictly with keys:
                 "composite_score": 1.0,
                 "metrics_breakdown": {
                     "semantic_similarity": 1.0,
-                    "privacy_reduction_score": 1.0,
+                    "qi_abstraction_score": 1.0,
                     "readability_score": 1.0,
+                    "privacy_reduction_score": 1.0,
                 },
                 "thresholds": {
                     "tau": effective_tau,
                     "floor_sim": effective_floor,
+                    "qi_floor": effective_qi_floor,
                     "weights": effective_weights,
                 },
+                "qi_analysis": [],
                 "modifications": [],
                 "drift_passed": True,
                 "similarity_score": 1.0,
@@ -514,6 +587,7 @@ You MUST return a valid JSON object strictly with keys:
             modifications=mods,
             tau=tau,
             floor_sim=floor_sim,
+            qi_floor=qi_floor,
             weights=weights,
         )
 

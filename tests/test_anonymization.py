@@ -122,7 +122,8 @@ class TestCompositeDecisionEngine(unittest.TestCase):
         self.defense = SemanticQuasiIdentifierDefense(
             tau=0.70,
             floor_sim=0.60,
-            weights={"sim": 0.50, "priv": 0.30, "read": 0.20},
+            qi_floor=0.50,
+            weights={"sim": 0.50, "qi": 0.30, "read": 0.20},
             embedder_model_name="",
             request_timeout=1,
         )
@@ -192,6 +193,7 @@ class TestCompositeDecisionEngine(unittest.TestCase):
             modifications=mods,
             tau=0.70,
             floor_sim=0.60,
+            qi_floor=0.50,
         )
 
         self.assertTrue(decision["is_accepted"])
@@ -199,7 +201,7 @@ class TestCompositeDecisionEngine(unittest.TestCase):
         self.assertEqual(decision["final_text"], cand)
         self.assertGreaterEqual(decision["composite_score"], 0.70)
         self.assertGreaterEqual(decision["metrics_breakdown"]["semantic_similarity"], 0.60)
-        self.assertEqual(decision["metrics_breakdown"]["privacy_reduction_score"], 1.0)
+        self.assertGreaterEqual(decision["metrics_breakdown"]["qi_abstraction_score"], 0.50)
 
     def test_hard_similarity_floor_rejection(self):
         """Even if composite score is high, semantic similarity below floor_sim MUST trigger fallback."""
@@ -214,6 +216,7 @@ class TestCompositeDecisionEngine(unittest.TestCase):
             modifications=mods,
             tau=0.50,
             floor_sim=0.60,  # hard floor
+            qi_floor=0.50,
         )
 
         self.assertFalse(decision["is_accepted"])
@@ -225,7 +228,7 @@ class TestCompositeDecisionEngine(unittest.TestCase):
         cand = "Report filed in spring 2022."
         mods = [{"original_span": "May 4, 2022"}]
 
-        custom_weights = {"sim": 0.40, "priv": 0.40, "read": 0.20}
+        custom_weights = {"sim": 0.40, "qi": 0.40, "read": 0.20}
         res = self.defense.evaluate_composite_decision(
             stage1_text=stage1,
             candidate_text=cand,
@@ -234,11 +237,11 @@ class TestCompositeDecisionEngine(unittest.TestCase):
         )
 
         self.assertEqual(res["thresholds"]["weights"]["sim"], 0.40)
-        self.assertEqual(res["thresholds"]["weights"]["priv"], 0.40)
+        self.assertEqual(res["thresholds"]["weights"]["qi"], 0.40)
         self.assertEqual(res["thresholds"]["weights"]["read"], 0.20)
         self.assertIn("composite_score", res)
         self.assertIn("semantic_similarity", res["metrics_breakdown"])
-        self.assertIn("privacy_reduction_score", res["metrics_breakdown"])
+        self.assertIn("qi_abstraction_score", res["metrics_breakdown"])
         self.assertIn("readability_score", res["metrics_breakdown"])
 
 

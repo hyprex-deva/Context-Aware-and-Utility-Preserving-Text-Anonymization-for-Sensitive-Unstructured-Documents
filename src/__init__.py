@@ -10,6 +10,7 @@ Modules:
 
 from src.stage1_direct_pii import DirectPIIAnonymizer, DetectedEntity
 from src.stage2_semantic_defense import SemanticQuasiIdentifierDefense
+from src.quasi_identifier_detector import QuasiIdentifierDetector
 from src.baselines import BaselinePresidio, BaselineRedacted
 from src.evaluate_metrics import (
     compute_privacy_metrics,
@@ -23,6 +24,7 @@ __all__ = [
     "DirectPIIAnonymizer",
     "DetectedEntity",
     "SemanticQuasiIdentifierDefense",
+    "QuasiIdentifierDetector",
     "BaselinePresidio",
     "BaselineRedacted",
     "compute_privacy_metrics",

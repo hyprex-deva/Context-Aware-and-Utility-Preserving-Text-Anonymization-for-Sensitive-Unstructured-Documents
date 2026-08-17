@@ -81,6 +81,7 @@ def run_benchmark(
     ollama_model: str = "qwen2.5:1.5b",
     tau: float = 0.72,
     floor_sim: float = 0.60,
+    qi_floor: float = 0.50,
     compute_heavy_metrics: bool = True,
 ) -> pd.DataFrame:
     """
@@ -90,12 +91,13 @@ def run_benchmark(
     logger.info(f"Starting Benchmark Evaluation on {len(samples)} multi-domain test samples...")
 
     # Initialize models
-    logger.info(f"Initializing models (Stage 2: Ollama {ollama_model}, tau={tau}, floor={floor_sim})...")
+    logger.info(f"Initializing models (Stage 2: Ollama {ollama_model}, tau={tau}, floor_sim={floor_sim}, qi_floor={qi_floor})...")
     stage1 = DirectPIIAnonymizer(use_ner=True)
     stage2 = SemanticQuasiIdentifierDefense(
         ollama_model=ollama_model,
         tau=tau,
         floor_sim=floor_sim,
+        qi_floor=qi_floor,
     )
     presidio_base = BaselinePresidio()
     redacted_base = BaselineRedacted(stage1_anonymizer=stage1)
@@ -144,7 +146,11 @@ def run_benchmark(
     guardrail_accept_count = 0
     for idx, s1_res in enumerate(tqdm(s1_results, desc="Evaluating Proposed Two-Stage")):
         res = stage2.generalize_text(
-            stage1_text=s1_res["sanitized_text"], original_text=original_texts[idx]
+            stage1_text=s1_res["sanitized_text"],
+            original_text=original_texts[idx],
+            tau=tau,
+            floor_sim=floor_sim,
+            qi_floor=qi_floor,
         )
         if res.get("is_accepted", res.get("drift_passed", False)):
             guardrail_accept_count += 1
@@ -237,13 +243,19 @@ def main():
         "--tau",
         type=float,
         default=0.72,
-        help="Composite score threshold tau (default: 0.72)",
+        help="Composite score threshold tau (provisional default: 0.72)",
     )
     parser.add_argument(
         "--floor_sim",
         type=float,
         default=0.60,
-        help="Hard semantic similarity floor (default: 0.60)",
+        help="Hard semantic similarity floor (provisional default: 0.60)",
+    )
+    parser.add_argument(
+        "--qi_floor",
+        type=float,
+        default=0.50,
+        help="Hard QI abstraction safety floor (provisional default: 0.50)",
     )
 
     parser.add_argument(
@@ -260,6 +272,7 @@ def main():
         ollama_model=args.ollama_model,
         tau=args.tau,
         floor_sim=args.floor_sim,
+        qi_floor=args.qi_floor,
         compute_heavy_metrics=not args.skip_heavy_metrics,
     )
     print_comparison_table(df_results)
