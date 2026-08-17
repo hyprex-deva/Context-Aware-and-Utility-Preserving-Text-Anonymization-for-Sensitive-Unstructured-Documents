@@ -26,10 +26,14 @@ Raw Unstructured Text
 ┌────────────────────────────────────────────────────────────────────────┐
 │ STAGE 2: Semantic Reasoning & Quasi-Identifier Generalization          │
 │  ├─ Local Quantized SLM: Ollama (qwen2.5:1.5b)                        │
-│  ├─ Hierarchical Coarsening of Rare Roles, Dates, & Event Combinations │
-│  └─ Semantic Drift Guardrail (SentenceTransformers all-MiniLM-L6-v2)  │
-│        ├─ Cosine Sim >= 0.80 ➔ ACCEPT Generalized Text                 │
-│        └─ Cosine Sim <  0.80 ➔ REJECT & Fallback to Stage 1            │
+│  ├─ Hierarchical Coarsening of Rare Roles, Dates, & Financials        │
+│  └─ Multi-Criteria Composite Guardrail:                                │
+│        ├─ S_semantic: SentenceTransformers (all-MiniLM-L6-v2)         │
+│        ├─ S_privacy: Quasi-identifier elimination/abstraction score   │
+│        ├─ S_readability: Length-ratio factor & syntactic integrity     │
+│        ├─ S_composite = (0.50*S_sem) + (0.30*S_priv) + (0.20*S_read)   │
+│        ├─ S_composite >= tau (0.72) AND S_semantic >= floor (0.60) ➔ ACCEPT │
+│        └─ Otherwise ➔ REJECT & Fallback to Stage 1                     │
 └────────────────────────────────────────────────────────────────────────┘
 
        │
@@ -50,11 +54,12 @@ context-aware-pii-masking/
 ├── src/
 │   ├── __init__.py                 # Core package exports
 │   ├── stage1_direct_pii.py        # Stage 1: Regex + Transformer NER + Faker
-│   ├── stage2_semantic_defense.py  # Stage 2: SLM Reasoning + MiniLM Drift Guardrail
+│   ├── stage2_semantic_defense.py  # Stage 2: SLM Reasoning + Composite Decision Guardrail
 │   ├── baselines.py                # Microsoft Presidio & Rigid Redaction baselines
 │   └── evaluate_metrics.py         # Privacy F1, BLEU-4, ROUGE-L, BERTScore & Cosine Sim
 ├── tests/
-│   └── test_anonymization.py       # Unit and integration test suite
+│   ├── test_anonymization.py       # Full unit and integration test suite
+│   └── test_stage2_guardrail.py    # Dedicated Stage 2 composite decision unit tests
 ├── app.py                          # Modern Streamlit interactive UI dashboard
 ├── run_evaluation.py               # Benchmark evaluation CLI script
 ├── requirements.txt                # Pinned dependencies

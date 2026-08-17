@@ -79,9 +79,10 @@ def run_benchmark(
     samples: List[Dict[str, Any]],
     output_dir: str = "data",
     ollama_model: str = "qwen2.5:1.5b",
+    tau: float = 0.72,
+    floor_sim: float = 0.60,
     compute_heavy_metrics: bool = True,
 ) -> pd.DataFrame:
-
     """
     Execute end-to-end evaluation across all models and baseline systems.
     """
@@ -89,12 +90,15 @@ def run_benchmark(
     logger.info(f"Starting Benchmark Evaluation on {len(samples)} multi-domain test samples...")
 
     # Initialize models
-    logger.info(f"Initializing models (Stage 2: Ollama {ollama_model})...")
+    logger.info(f"Initializing models (Stage 2: Ollama {ollama_model}, tau={tau}, floor={floor_sim})...")
     stage1 = DirectPIIAnonymizer(use_ner=True)
-    stage2 = SemanticQuasiIdentifierDefense(ollama_model=ollama_model)
+    stage2 = SemanticQuasiIdentifierDefense(
+        ollama_model=ollama_model,
+        tau=tau,
+        floor_sim=floor_sim,
+    )
     presidio_base = BaselinePresidio()
     redacted_base = BaselineRedacted(stage1_anonymizer=stage1)
-
 
     original_texts = [s["text"] for s in samples]
     ground_truth_entities = [s.get("direct_pii", []) for s in samples]
@@ -105,7 +109,7 @@ def run_benchmark(
         "Baseline: Microsoft Presidio (<TAGS>)": {"sanitized": [], "entities": [], "time": 0.0},
         "Proposed: Stage 1 (Direct PII + Surrogates)": {"sanitized": [], "entities": [], "time": 0.0},
         "Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)": {
-            "sanitized": [], "entities": [], "drift_passes": 0, "time": 0.0
+            "sanitized": [], "entities": [], "guardrail_accepts": 0, "time": 0.0
         },
     }
 
@@ -137,13 +141,13 @@ def run_benchmark(
 
     # 4. Proposed Two-Stage
     t0 = time.time()
-    drift_pass_count = 0
+    guardrail_accept_count = 0
     for idx, s1_res in enumerate(tqdm(s1_results, desc="Evaluating Proposed Two-Stage")):
         res = stage2.generalize_text(
             stage1_text=s1_res["sanitized_text"], original_text=original_texts[idx]
         )
-        if res["drift_passed"]:
-            drift_pass_count += 1
+        if res.get("is_accepted", res.get("drift_passed", False)):
+            guardrail_accept_count += 1
         outputs["Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)"]["sanitized"].append(
             res["final_text"]
         )
@@ -151,7 +155,7 @@ def run_benchmark(
             s1_res["detected_entities"]
         )
     outputs["Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)"]["time"] = time.time() - t0
-    outputs["Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)"]["drift_passes"] = drift_pass_count
+    outputs["Proposed: Two-Stage Architecture (Surrogates + Semantic SLM)"]["guardrail_accepts"] = guardrail_accept_count
 
     # Compute Evaluation Metrics
     logger.info("Computing Privacy, Utility (BLEU-4, ROUGE-L, Cosine Sim, BERTScore) metrics...")
@@ -229,6 +233,18 @@ def main():
         default="qwen2.5:1.5b",
         help="Ollama model tag for Stage 2 (default: qwen2.5:1.5b)",
     )
+    parser.add_argument(
+        "--tau",
+        type=float,
+        default=0.72,
+        help="Composite score threshold tau (default: 0.72)",
+    )
+    parser.add_argument(
+        "--floor_sim",
+        type=float,
+        default=0.60,
+        help="Hard semantic similarity floor (default: 0.60)",
+    )
 
     parser.add_argument(
         "--skip_heavy_metrics",
@@ -242,6 +258,8 @@ def main():
         samples=samples,
         output_dir=args.output_dir,
         ollama_model=args.ollama_model,
+        tau=args.tau,
+        floor_sim=args.floor_sim,
         compute_heavy_metrics=not args.skip_heavy_metrics,
     )
     print_comparison_table(df_results)

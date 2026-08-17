@@ -67,8 +67,12 @@ class TestDirectPIIAnonymizer(unittest.TestCase):
 class TestSemanticQuasiIdentifierDefense(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.defense = SemanticQuasiIdentifierDefense(ollama_model="qwen2.5:1.5b", similarity_threshold=0.70)
-
+        cls.defense = SemanticQuasiIdentifierDefense(
+            ollama_model="qwen2.5:1.5b",
+            tau=0.72,
+            floor_sim=0.60,
+            request_timeout=2,
+        )
 
     def test_quasi_identifier_candidate_generalization(self):
         text = (
@@ -77,9 +81,12 @@ class TestSemanticQuasiIdentifierDefense(unittest.TestCase):
         )
         res = self.defense.generalize_text(text)
         
-        # Verify Ollama SLM output contains generalized text and metadata
+        # Verify output contains structured telemetry
         self.assertIsInstance(res["candidate_text"], str)
-        self.assertGreater(len(res["candidate_text"]), 10)
+        self.assertIn("is_accepted", res)
+        self.assertIn("composite_score", res)
+        self.assertIn("metrics_breakdown", res)
+        self.assertIn("thresholds", res)
         self.assertIn("Ollama LLM", res["backend_used"])
 
     def test_full_document_guardrail_pass(self):
@@ -90,20 +97,149 @@ class TestSemanticQuasiIdentifierDefense(unittest.TestCase):
         )
         res = self.defense.generalize_text(doc)
         self.assertIsInstance(res["final_text"], str)
-        self.assertGreaterEqual(res["similarity_score"], 0.0)
+        self.assertGreaterEqual(res["composite_score"], 0.0)
+        self.assertIn("semantic_similarity", res["metrics_breakdown"])
+        self.assertIn("privacy_reduction_score", res["metrics_breakdown"])
+        self.assertIn("readability_score", res["metrics_breakdown"])
 
     def test_drift_guardrail_fallback_trigger(self):
-        """When similarity threshold is strictly unachievable (e.g. 0.999), fallback to Stage 1 text."""
+        """When tau is strictly unachievable (e.g. 0.999), fallback to Stage 1 text."""
         strict_defense = self.defense
-        old_thresh = strict_defense.similarity_threshold
+        old_thresh = strict_defense.tau
         try:
-            strict_defense.similarity_threshold = 0.999
+            strict_defense.tau = 0.999
             text = "Subject is the sole Chief Pediatric Neurosurgeon for Rare Brain Stem Tumors."
             res = strict_defense.generalize_text(text)
-            if not res["drift_passed"]:
+            if not res["is_accepted"]:
                 self.assertEqual(res["final_text"], text)
+                self.assertTrue(res["fallback_triggered"])
         finally:
-            strict_defense.similarity_threshold = old_thresh
+            strict_defense.tau = old_thresh
+
+
+class TestCompositeDecisionEngine(unittest.TestCase):
+    def setUp(self):
+        self.defense = SemanticQuasiIdentifierDefense(
+            tau=0.70,
+            floor_sim=0.60,
+            weights={"sim": 0.50, "priv": 0.30, "read": 0.20},
+            embedder_model_name="",
+            request_timeout=1,
+        )
+
+    def test_privacy_reduction_metric_calculation(self):
+        # 1. No modifications flagged -> default 1.0
+        score_empty = self.defense.compute_privacy_reduction("Some candidate text", [])
+        self.assertEqual(score_empty, 1.0)
+
+        # 2. Flagged phrases completely removed/abstracted -> 1.0
+        mods = [
+            {"original_span": "$45,000", "generalized_span": "a five-figure wire"},
+            {"original_span": "Chief Neurosurgeon", "generalized_span": "Medical Specialist"},
+        ]
+        cand_clean = "Transfer of a five-figure wire approved by Medical Specialist."
+        score_full = self.defense.compute_privacy_reduction(cand_clean, mods)
+        self.assertEqual(score_full, 1.0)
+
+        # 3. Partial removal (1 of 2 phrases remains) -> 0.5
+        cand_partial = "Transfer of $45,000 approved by Medical Specialist."
+        score_partial = self.defense.compute_privacy_reduction(cand_partial, mods)
+        self.assertEqual(score_partial, 0.5)
+
+        # 4. Zero removal (both remain) -> 0.0
+        cand_none = "Transfer of $45,000 approved by Chief Neurosurgeon."
+        score_none = self.defense.compute_privacy_reduction(cand_none, mods)
+        self.assertEqual(score_none, 0.0)
+
+    def test_readability_metric_calculation(self):
+        orig = "The patient underwent surgery at Johns Hopkins on March 15, 2024."
+        cand_good = "The patient underwent surgery at a regional hospital in early 2024."
+        
+        score_good = self.defense.compute_readability_score(orig, cand_good)
+        self.assertGreater(score_good, 0.80)
+        self.assertLessEqual(score_good, 1.0)
+
+        # Severe truncation penalty
+        cand_truncated = "The patient"
+        score_trunc = self.defense.compute_readability_score(orig, cand_truncated)
+        self.assertLess(score_trunc, score_good)
+
+        # Unbalanced quotes / syntax penalty
+        cand_unbalanced = 'The patient underwent "surgery at hospital in early 2024.'
+        score_unbalanced = self.defense.compute_readability_score(orig, cand_unbalanced)
+        self.assertLess(score_unbalanced, score_good)
+
+    def test_composite_decision_acceptance(self):
+        stage1 = (
+            "The patient is admitted to the hospital for treatment. "
+            "The procedure cost is $45,000 and the attending doctor is Chief Pediatric Neurosurgeon "
+            "scheduled on August 14, 2023."
+        )
+        cand = (
+            "The patient is admitted to the hospital for treatment. "
+            "The procedure cost is a five-figure sum and the attending doctor is Medical Specialist "
+            "scheduled in late summer 2023."
+        )
+        mods = [
+            {"original_span": "$45,000"},
+            {"original_span": "Chief Pediatric Neurosurgeon"},
+            {"original_span": "August 14, 2023"},
+        ]
+
+        decision = self.defense.evaluate_composite_decision(
+            stage1_text=stage1,
+            candidate_text=cand,
+            modifications=mods,
+            tau=0.70,
+            floor_sim=0.60,
+        )
+
+        self.assertTrue(decision["is_accepted"])
+        self.assertFalse(decision["fallback_triggered"])
+        self.assertEqual(decision["final_text"], cand)
+        self.assertGreaterEqual(decision["composite_score"], 0.70)
+        self.assertGreaterEqual(decision["metrics_breakdown"]["semantic_similarity"], 0.60)
+        self.assertEqual(decision["metrics_breakdown"]["privacy_reduction_score"], 1.0)
+
+    def test_hard_similarity_floor_rejection(self):
+        """Even if composite score is high, semantic similarity below floor_sim MUST trigger fallback."""
+        stage1 = "The patient was prescribed amoxicillin 500mg twice daily."
+        # Completely off-topic candidate
+        cand = "Quantum computers leverage superposition to calculate prime factors."
+        mods = [{"original_span": "amoxicillin 500mg"}]
+
+        decision = self.defense.evaluate_composite_decision(
+            stage1_text=stage1,
+            candidate_text=cand,
+            modifications=mods,
+            tau=0.50,
+            floor_sim=0.60,  # hard floor
+        )
+
+        self.assertFalse(decision["is_accepted"])
+        self.assertTrue(decision["fallback_triggered"])
+        self.assertEqual(decision["final_text"], stage1)
+
+    def test_custom_weights_and_telemetry_structure(self):
+        stage1 = "Report filed on May 4, 2022."
+        cand = "Report filed in spring 2022."
+        mods = [{"original_span": "May 4, 2022"}]
+
+        custom_weights = {"sim": 0.40, "priv": 0.40, "read": 0.20}
+        res = self.defense.evaluate_composite_decision(
+            stage1_text=stage1,
+            candidate_text=cand,
+            modifications=mods,
+            weights=custom_weights,
+        )
+
+        self.assertEqual(res["thresholds"]["weights"]["sim"], 0.40)
+        self.assertEqual(res["thresholds"]["weights"]["priv"], 0.40)
+        self.assertEqual(res["thresholds"]["weights"]["read"], 0.20)
+        self.assertIn("composite_score", res)
+        self.assertIn("semantic_similarity", res["metrics_breakdown"])
+        self.assertIn("privacy_reduction_score", res["metrics_breakdown"])
+        self.assertIn("readability_score", res["metrics_breakdown"])
 
 
 

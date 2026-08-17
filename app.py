@@ -139,10 +139,18 @@ def get_stage1_anonymizer() -> DirectPIIAnonymizer:
 
 
 @st.cache_resource
-def get_stage2_defense(threshold: float = 0.80) -> SemanticQuasiIdentifierDefense:
+def get_stage2_defense(
+    tau: float = 0.72,
+    floor_sim: float = 0.60,
+    w_sim: float = 0.50,
+    w_priv: float = 0.30,
+    w_read: float = 0.20,
+) -> SemanticQuasiIdentifierDefense:
     return SemanticQuasiIdentifierDefense(
         ollama_model="qwen2.5:1.5b",
-        similarity_threshold=threshold,
+        tau=tau,
+        floor_sim=floor_sim,
+        weights={"sim": w_sim, "priv": w_priv, "read": w_read},
     )
 
 
@@ -244,7 +252,7 @@ def main():
             <h1>🛡️ Context-Aware & Utility-Preserving Text Anonymization</h1>
             <p>
                 Two-Stage Architecture: <strong>Stage 1</strong> (Deterministic Synthetic Surrogates via Transformer NER + Regex) 
-                &rarr; <strong>Stage 2</strong> (Hierarchical Quasi-Identifier Generalization via <strong>Ollama qwen2.5:1.5b</strong> + MiniLM Semantic Drift Guardrail).
+                &rarr; <strong>Stage 2</strong> (Hierarchical Quasi-Identifier Generalization via <strong>Ollama qwen2.5:1.5b</strong> + Multi-Criteria Composite Decision Guardrail).
             </p>
         </div>
         """,
@@ -282,17 +290,33 @@ def main():
             }
 
         st.divider()
-        st.subheader("Stage 2 Reasoning Engine")
+        st.subheader("Stage 2 Decision Engine")
         st.success("🦙 **Ollama SLM**: `qwen2.5:1.5b` (Active)")
         
-        sim_threshold = st.slider(
-            "Semantic Drift Threshold (Cosine Sim)",
-            min_value=0.50,
-            max_value=0.95,
-            value=0.80,
-            step=0.05,
-            help="Minimum cosine similarity required by MiniLM guardrail to accept generalized text.",
-        )
+        col_t1, col_t2 = st.columns(2)
+        with col_t1:
+            tau_threshold = st.slider(
+                "Composite Threshold (τ)",
+                min_value=0.50,
+                max_value=0.95,
+                value=0.72,
+                step=0.02,
+                help="Minimum composite score (S_composite) required to accept candidate rewrite.",
+            )
+        with col_t2:
+            floor_sim = st.slider(
+                "Safety Sim Floor",
+                min_value=0.40,
+                max_value=0.85,
+                value=0.60,
+                step=0.05,
+                help="Hard semantic similarity floor (S_semantic) required regardless of composite score.",
+            )
+
+        with st.expander("⚖️ Decision Weights Tuning", expanded=False):
+            w_sim = st.slider("Semantic Weight (w_sim)", 0.0, 1.0, 0.50, 0.05)
+            w_priv = st.slider("Privacy Weight (w_priv)", 0.0, 1.0, 0.30, 0.05)
+            w_read = st.slider("Readability Weight (w_read)", 0.0, 1.0, 0.20, 0.05)
 
         st.divider()
         st.markdown(
@@ -313,8 +337,6 @@ def main():
             unsafe_allow_html=True,
         )
 
-
-
     # Text Input Area
     input_text = st.text_area(
         "📝 Input Unstructured Document",
@@ -331,19 +353,27 @@ def main():
         # Load pipelines
         with st.spinner("Processing through Two-Stage Anonymization Architecture (Ollama qwen2.5:1.5b)..."):
             stage1_engine = get_stage1_anonymizer()
-            stage2_engine = get_stage2_defense(threshold=sim_threshold)
+            stage2_engine = get_stage2_defense(
+                tau=tau_threshold,
+                floor_sim=floor_sim,
+                w_sim=w_sim,
+                w_priv=w_priv,
+                w_read=w_read,
+            )
             presidio_engine = get_presidio_baseline()
             redacted_engine = get_redacted_baseline()
-
 
             # Execute Stage 1
             s1_result = stage1_engine.anonymize(input_text)
             
-            # Execute Stage 2
+            # Execute Stage 2 with Composite Engine
             s2_result = stage2_engine.generalize_text(
-                stage1_text=s1_result["sanitized_text"], original_text=input_text
+                stage1_text=s1_result["sanitized_text"],
+                original_text=input_text,
+                tau=tau_threshold,
+                floor_sim=floor_sim,
+                weights={"sim": w_sim, "priv": w_priv, "read": w_read},
             )
-
 
             # Execute Baselines
             presidio_res = presidio_engine.anonymize(input_text)
@@ -384,10 +414,15 @@ def main():
             )
 
         with col3:
+            s_comp = s2_result.get("composite_score", 0.0)
+            metrics_bd = s2_result.get("metrics_breakdown", {})
+            s_sim = metrics_bd.get("semantic_similarity", s2_result.get("similarity_score", 0.0))
+            is_acc = s2_result.get("is_accepted", s2_result.get("drift_passed", True))
+
             guardrail_badge = (
-                f"<div class='guardrail-pass'>✅ Drift Guardrail Passed ({s2_result['similarity_score']:.2f} &ge; {sim_threshold})</div>"
-                if s2_result["drift_passed"]
-                else f"<div class='guardrail-fallback'>⚠️ Drift Fallback Triggered ({s2_result['similarity_score']:.2f} &lt; {sim_threshold})</div>"
+                f"<div class='guardrail-pass'>✅ Guardrail Accepted (S<sub>comp</sub>: {s_comp:.2f} &ge; {tau_threshold:.2f} | S<sub>sim</sub>: {s_sim:.2f} &ge; {floor_sim:.2f})</div>"
+                if is_acc
+                else f"<div class='guardrail-fallback'>⚠️ Fallback Triggered (S<sub>comp</sub>: {s_comp:.2f} | Floor: {floor_sim:.2f})</div>"
             )
 
             st.markdown(
@@ -423,7 +458,7 @@ def main():
 
         # Privacy & Utility Audit Panel
         with st.expander("📊 Privacy & Utility Audit Dashboard", expanded=True):
-            tab1, tab2, tab3 = st.tabs(["🏷️ Detected Entities & Surrogates", "🧠 Semantic Generalization Logs", "📈 Quantitative Utility Metrics"])
+            tab1, tab2, tab3 = st.tabs(["🏷️ Detected Entities & Surrogates", "🧠 Semantic Generalization & Guardrail Logs", "📈 Quantitative Utility Metrics"])
 
             with tab1:
                 if s1_result["detected_entities"]:
@@ -444,23 +479,36 @@ def main():
                     st.write("No direct PII entities detected in this document.")
 
             with tab2:
-                if s2_result["generalized_spans"]:
-                    st.markdown(f"**Applied Contextual Transformations & Rephrasing:** ({len(s2_result['generalized_spans'])} spans)")
-                    df_mods = pd.DataFrame(s2_result["generalized_spans"])
+                # Composite Decision Telemetry
+                st.markdown("#### 🎯 Composite Guardrail Telemetry")
+                gcol1, gcol2, gcol3, gcol4 = st.columns(4)
+                with gcol1:
+                    st.metric("Composite Score (S_comp)", f"{s2_result.get('composite_score', 0.0):.4f}", f"Threshold τ = {tau_threshold:.2f}")
+                with gcol2:
+                    st.metric("Semantic Sim (S_sim)", f"{s2_result.get('metrics_breakdown', {}).get('semantic_similarity', 0.0):.4f}", f"Floor = {floor_sim:.2f}")
+                with gcol3:
+                    st.metric("Privacy Reduction (S_priv)", f"{s2_result.get('metrics_breakdown', {}).get('privacy_reduction_score', 1.0):.4f}")
+                with gcol4:
+                    st.metric("Readability (S_read)", f"{s2_result.get('metrics_breakdown', {}).get('readability_score', 1.0):.4f}")
+
+                st.divider()
+                mods = s2_result.get("modifications") or s2_result.get("generalized_spans", [])
+                if mods:
+                    st.markdown(f"**Flagged Quasi-Identifiers & Applied Generalizations:** ({len(mods)} spans)")
+                    df_mods = pd.DataFrame(mods)
                     st.dataframe(df_mods, use_container_width=True)
                     
-                    st.markdown("**Candidate Generalized Text (Before Guardrail):**")
-                    st.code(s2_result["candidate_text"], language="text")
+                    st.markdown("**Candidate Generalized Text (Before Decision Guardrail):**")
+                    st.code(s2_result.get("candidate_text", ""), language="text")
                     
-                    if not s2_result["drift_passed"]:
+                    if not is_acc:
                         st.warning(
-                            f"⚠️ Semantic Drift Guardrail Triggered: The candidate text has a cosine similarity of "
-                            f"{s2_result['similarity_score']:.4f} (below the threshold of {sim_threshold:.2f}). "
-                            f"Stage 1 surrogate text was retained in Column 3 to guarantee document utility safety."
+                            f"⚠️ Multi-Criteria Guardrail Fallback Triggered: Candidate score failed acceptance criteria "
+                            f"(Composite: {s_comp:.4f} vs threshold {tau_threshold:.2f}, Semantic: {s_sim:.4f} vs floor {floor_sim:.2f}). "
+                            f"Stage 1 surrogate text was safely retained in Column 3 to guarantee document utility."
                         )
                 else:
-                    st.info("No high-risk quasi-identifiers or unique role patterns matched in this document.")
-
+                    st.info("No high-risk quasi-identifiers flagged by the reasoning SLM for this document.")
 
             with tab3:
                 m_col1, m_col2, m_col3, m_col4, m_col5 = st.columns(5)
@@ -478,7 +526,7 @@ def main():
                 with m_col4:
                     st.metric("Stage 2 BLEU-4", f"{b_s2:.4f}")
                 with m_col5:
-                    st.metric("MiniLM Cosine Sim", f"{s2_result['similarity_score']:.4f}")
+                    st.metric("Composite Score", f"{s2_result.get('composite_score', 0.0):.4f}")
 
 
 if __name__ == "__main__":
