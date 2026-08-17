@@ -14,6 +14,8 @@ from src.quasi_identifier_detector import QuasiIdentifierDetector
 from src.baselines import BaselinePresidio, BaselineRedacted
 from src.evaluate_metrics import (
     compute_privacy_metrics,
+    compute_ground_truth_pii_leakage,
+    compute_per_entity_pii_metrics,
     compute_rouge_l_scores,
     compute_bert_scores,
     compute_semantic_similarities,
@@ -28,6 +30,8 @@ __all__ = [
     "BaselinePresidio",
     "BaselineRedacted",
     "compute_privacy_metrics",
+    "compute_ground_truth_pii_leakage",
+    "compute_per_entity_pii_metrics",
     "compute_rouge_l_scores",
     "compute_bert_scores",
     "compute_semantic_similarities",

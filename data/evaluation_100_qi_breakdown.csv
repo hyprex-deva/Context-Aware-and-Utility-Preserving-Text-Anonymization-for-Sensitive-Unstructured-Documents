@@ -1,0 +1,4 @@
+QI Type,Count,Average Initial Risk,Average Residual Risk,Mitigated Count,Partial Count,Exposed Count,Mitigation Rate,Exposure Rate
+DATE,109,1.0,0.5797,35,21,53,0.5138,0.4862
+DEMOGRAPHIC,31,1.0,0.4181,10,12,9,0.7097,0.2903
+MONEY,2,1.0,1.0,0,0,2,0.0,1.0

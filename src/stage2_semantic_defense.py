@@ -84,7 +84,7 @@ You MUST return a valid JSON object strictly with keys:
         exposure_threshold: float = 0.90,
         compound_alpha: float = 0.40,
         device: str = "cpu",
-        request_timeout: int = 15,
+        request_timeout: int = 60,
     ) -> None:
         """
         Initialize Stage 2 LLM Semantic Defense Engine with Independent QI Guardrail.
@@ -103,7 +103,7 @@ You MUST return a valid JSON object strictly with keys:
             exposure_threshold: Configurable residual risk threshold for 'exposed' status (default: 0.90).
             compound_alpha: Conservative weighting factor for compound QI residual risk (default: 0.40).
             device: Computing device for embedder ("cpu" or "cuda").
-            request_timeout: HTTP request timeout in seconds for Ollama calls.
+            request_timeout: HTTP request timeout in seconds for Ollama calls (default: 60).
         """
         self.ollama_model = ollama_model
         self.ollama_url = ollama_url

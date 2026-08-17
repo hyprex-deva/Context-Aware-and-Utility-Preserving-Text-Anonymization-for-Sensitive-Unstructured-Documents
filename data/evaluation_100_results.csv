@@ -1,0 +1,5 @@
+System,PII Precision (Relaxed),PII Recall (Relaxed),PII F1 (Relaxed),PII Precision (Exact),PII Recall (Exact),PII F1 (Exact),PII Leakage Rate,PII Removal Rate,ROUGE-L F1,BLEU-4,Semantic Cosine Sim,BERTScore F1,Readability Score,Avg Latency (s),QI Abstraction Score,QI Mitigation Rate,QI Exposure Rate,Fallback Rate
+Rigid Redaction,0.8764,0.527,0.6582,0.5826,0.3503,0.4375,0.4671,0.5329,0.6858,0.4706,0.6928,0.8601,0.9456,0.408,N/A,N/A,N/A,N/A
+Microsoft Presidio,0.6744,0.5031,0.5763,0.5352,0.3992,0.4573,0.4987,0.5013,0.6607,0.4341,0.8507,0.8807,0.9422,0.08,N/A,N/A,N/A,N/A
+Proposed: Stage 1 (Surrogates),0.8891,0.5346,0.6677,0.5826,0.3503,0.4375,0.4759,0.5241,0.639,0.4512,0.7863,0.9179,0.9007,0.356,N/A,N/A,N/A,N/A
+Proposed: Two-Stage (Stage 1 + Stage 2),0.8891,0.5346,0.6677,0.5826,0.3503,0.4375,0.4516,0.5484,0.5899,0.3978,0.756,0.9026,0.8685,0.0,0.4872,0.5493,0.4507,0.78

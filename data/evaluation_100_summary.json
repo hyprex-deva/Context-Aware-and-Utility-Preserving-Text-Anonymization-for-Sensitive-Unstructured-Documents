@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "evaluation_title": "Context-Aware & Utility-Preserving Text Anonymization Benchmark",
+    "dataset": "ai4privacy/pii-masking-300k (English subset)",
+    "sample_count": 100,
+    "random_seed": 42,
+    "timestamp": "2026-08-17T18:27:48.718588",
+    "python_version": "3.11.4",
+    "os": "Windows-10-10.0.26200-SP0",
+    "provisional_parameters": {
+      "tau": 0.72,
+      "floor_sim": 0.6,
+      "qi_floor": 0.5,
+      "weights": {
+        "sim": 0.5,
+        "qi": 0.3,
+        "read": 0.2
+      }
+    },
+    "total_elapsed_seconds": 6488.63
+  },
+  "system_results": {
+    "Rigid Redaction": {
+      "System": "Rigid Redaction",
+      "PII Precision (Relaxed)": 0.8764,
+      "PII Recall (Relaxed)": 0.527,
+      "PII F1 (Relaxed)": 0.6582,
+      "PII Precision (Exact)": 0.5826,
+      "PII Recall (Exact)": 0.3503,
+      "PII F1 (Exact)": 0.4375,
+      "PII Leakage Rate": 0.4671,
+      "PII Removal Rate": 0.5329,
+      "ROUGE-L F1": 0.6858,
+      "BLEU-4": 0.4706,
+      "Semantic Cosine Sim": 0.6928,
+      "BERTScore F1": 0.8601,
+      "Readability Score": 0.9456,
+      "Avg Latency (s)": 0.408,
+      "QI Abstraction Score": "N/A",
+      "QI Mitigation Rate": "N/A",
+      "QI Exposure Rate": "N/A",
+      "Fallback Rate": "N/A"
+    },
+    "Microsoft Presidio": {
+      "System": "Microsoft Presidio",
+      "PII Precision (Relaxed)": 0.6744,
+      "PII Recall (Relaxed)": 0.5031,
+      "PII F1 (Relaxed)": 0.5763,
+      "PII Precision (Exact)": 0.5352,
+      "PII Recall (Exact)": 0.3992,
+      "PII F1 (Exact)": 0.4573,
+      "PII Leakage Rate": 0.4987,
+      "PII Removal Rate": 0.5013,
+      "ROUGE-L F1": 0.6607,
+      "BLEU-4": 0.4341,
+      "Semantic Cosine Sim": 0.8507,
+      "BERTScore F1": 0.8807,
+      "Readability Score": 0.9422,
+      "Avg Latency (s)": 0.08,
+      "QI Abstraction Score": "N/A",
+      "QI Mitigation Rate": "N/A",
+      "QI Exposure Rate": "N/A",
+      "Fallback Rate": "N/A"
+    },
+    "Proposed: Stage 1 (Surrogates)": {
+      "System": "Proposed: Stage 1 (Surrogates)",
+      "PII Precision (Relaxed)": 0.8891,
+      "PII Recall (Relaxed)": 0.5346,
+      "PII F1 (Relaxed)": 0.6677,
+      "PII Precision (Exact)": 0.5826,
+      "PII Recall (Exact)": 0.3503,
+      "PII F1 (Exact)": 0.4375,
+      "PII Leakage Rate": 0.4759,
+      "PII Removal Rate": 0.5241,
+      "ROUGE-L F1": 0.639,
+      "BLEU-4": 0.4512,
+      "Semantic Cosine Sim": 0.7863,
+      "BERTScore F1": 0.9179,
+      "Readability Score": 0.9007,
+      "Avg Latency (s)": 0.356,
+      "QI Abstraction Score": "N/A",
+      "QI Mitigation Rate": "N/A",
+      "QI Exposure Rate": "N/A",
+      "Fallback Rate": "N/A"
+    },
+    "Proposed: Two-Stage (Stage 1 + Stage 2)": {
+      "System": "Proposed: Two-Stage (Stage 1 + Stage 2)",
+      "PII Precision (Relaxed)": 0.8891,
+      "PII Recall (Relaxed)": 0.5346,
+      "PII F1 (Relaxed)": 0.6677,
+      "PII Precision (Exact)": 0.5826,
+      "PII Recall (Exact)": 0.3503,
+      "PII F1 (Exact)": 0.4375,
+      "PII Leakage Rate": 0.4516,
+      "PII Removal Rate": 0.5484,
+      "ROUGE-L F1": 0.5899,
+      "BLEU-4": 0.3978,
+      "Semantic Cosine Sim": 0.756,
+      "BERTScore F1": 0.9026,
+      "Readability Score": 0.8685,
+      "Avg Latency (s)": 0.0,
+      "QI Abstraction Score": 0.4872,
+      "QI Mitigation Rate": 0.5493,
+      "QI Exposure Rate": 0.4507,
+      "Fallback Rate": 0.78
+    }
+  },
+  "guardrail_telemetry": {
+    "total_candidates": 100,
+    "accepted_candidates": 22,
+    "rejected_candidates": 78,
+    "fallback_rate": 0.78,
+    "rejection_cause_distribution": {
+      "tau_failure": 8,
+      "semantic_floor_failure": 0,
+      "qi_floor_failure": 0,
+      "multiple_failures": 70
+    },
+    "ablation_comparison": {
+      "Approach A: Single Cosine Threshold (S_sim >= 0.80)": {
+        "accepted_count": 41,
+        "acceptance_rate": 0.41,
+        "fallback_rate": 0.59
+      },
+      "Approach B: Three-Way Composite Guardrail (Current)": {
+        "accepted_count": 22,
+        "acceptance_rate": 0.22,
+        "fallback_rate": 0.78
+      }
+    }
+  }
+}

@@ -1,0 +1,880 @@
+{
+  "successful_stage2_generalizations": [
+    {
+      "sample_id": "ai4privacy_47610B",
+      "original_text": "CERTIFICATION_B:\n      lnakjegaqdukrjtg47@tutanota.com\n      759 33 1269\n      8736976840\n      T18HF0168923\n      US\n      421\n      Bessemer Mine Road\n      Landers\n      CA\n      92285\n      Mansio...",
+      "stage1_text": "CERTIFICATION_B:\n      sarah35@hotmail.com\n      759 33 1269\n      946.324.7510\n      T18HF0168923\n      US\n      421\n      Medina PLC Davidstad\n      CA\n      92285\n      Mansion 372\n      3e89:6c64:...",
+      "candidate_text": "sarah35@hotmail.com, 759 33 1269, 946.324.7510, T18HF0168923, US, 421, Medina PLC Davidstad, CA, 92285, Mansion 372, 3e89:6c64:e117:dac3:119c:4ea4:e180:5081, 5 AM, MikefiRoy Warners\u00e1ti...",
+      "final_text": "sarah35@hotmail.com, 759 33 1269, 946.324.7510, T18HF0168923, US, 421, Medina PLC Davidstad, CA, 92285, Mansion 372, 3e89:6c64:e117:dac3:119c:4ea4:e180:5081, 5 AM, MikefiRoy Warners\u00e1ti...",
+      "composite_score": 0.8138,
+      "metrics": {
+        "semantic_similarity": 0.7393,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.7209,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "12/02/2059",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_46995B",
+      "original_text": "ant 2:**\n- Date of Birth: 20/12/1979\n- Username: gisep\n- Email: 1979million.jaouada@aol.com\n- Driver's License: MILLI.712209.MG.810\n- Country: United Kingdom\n- Building: 308\n- Street: South Africa Roa...",
+      "stage1_text": "ant 2:**\n- Date of Birth: 20/12/1979\n- Username: gisep\n- Email: contrerasangela@hotmail.com\n- Driver's Switchable bi-directional challenge: TVNRO.411824.QG.493: Kington\n- Building: 308\n- Street: Lake ...",
+      "candidate_text": "an ant 2 user with a username of gisep, email contrerasangela@hotmail.com, driver's switchable bi-directional challenge TVNRO.411824.QG.493, living in North Matthewberg, ENG, with a postcode of W12 7R...",
+      "final_text": "an ant 2 user with a username of gisep, email contrerasangela@hotmail.com, driver's switchable bi-directional challenge TVNRO.411824.QG.493, living in North Matthewberg, ENG, with a postcode of W12 7R...",
+      "composite_score": 0.8178,
+      "metrics": {
+        "semantic_similarity": 0.767,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.6714,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 20/12/1979",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "20/12/1979",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "December 26th, 1993",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_47102B",
+      "original_text": "Zuid Langeweg Dreischor Dreischor Zeeland 4315 Residence 123\n  - Date of Birth: 30/10/1991\n  - Given Name: Izbi\n  - Last Name: D'andres\n\n- **Participant B:**\n  - Username: S4\n  - Email: S@gmail.com\n  ...",
+      "stage1_text": "Davis Ltd 4315 Residence 123\n  - Date of Birth: 30/10/1991\n  - Given Name: Izbi\n  - Last Name: D'andres\n\n- **Participant B:**\n  - Username: S4\n  - Email: keyemily@hotmail.com\n  - Social Security Numbe...",
+      "candidate_text": "Davis Ltd 4315 Residence 123 - Date of Birth: 15th June 1970, Given Name: Wendyvar, Given Name 2: Ryan\u00edn, Address: 571 Moonburgh 3 Deputy IN 47230, Social Security Number: 276-74-0660, Country: South ...",
+      "final_text": "Davis Ltd 4315 Residence 123 - Date of Birth: 15th June 1970, Given Name: Wendyvar, Given Name 2: Ryan\u00edn, Address: 571 Moonburgh 3 Deputy IN 47230, Social Security Number: 276-74-0660, Country: South ...",
+      "composite_score": 0.7866,
+      "metrics": {
+        "semantic_similarity": 0.8684,
+        "qi_abstraction_score": 0.6667,
+        "readability_score": 0.7617,
+        "privacy_reduction_score": 0.6667
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 30/10/1991",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "30/10/1991",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "15th June 1970",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_40775B",
+      "original_text": "rgy, Guirard\n- Gender: Masculine\n- Username: kees.gyorgy02\n- Email: keesguirard@aol.com\n- Social Security Number: 464501286\n- ID Card Type: RGI\n- Telephone: 00758-30091\n- Nationality: Nederland\n- Addr...",
+      "stage1_text": "rgy, GJesusrard\n- Gender: Johnsculine\n- Username: kees.gyorgy02\n- Email: michealvalentine@yahoo.com\n- Social Security Number: 274.968.8623x924\n- ID Card Type: RGI\n- Telephone: 00758-30091\n- Nationalit...",
+      "candidate_text": "rgy, GJesusrard\n- Gender: Johnsculine\n- Username: kees.gyorgy02\n- Email: michealvalentine@yahoo.com\n- Social Security Number: 274.968.8623x924\n- ID Card Type: RGI\n- Telephone: 00758-30091\n- Nationalit...",
+      "final_text": "rgy, GJesusrard\n- Gender: Johnsculine\n- Username: kees.gyorgy02\n- Email: michealvalentine@yahoo.com\n- Social Security Number: 274.968.8623x924\n- ID Card Type: RGI\n- Telephone: 00758-30091\n- Nationalit...",
+      "composite_score": 1.0,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": []
+    },
+    {
+      "sample_id": "ai4privacy_52871",
+      "original_text": "Individual_Type_id(1)\tF\tPrincess\txlhojasfwnfcl067@tutanota.com\t629-48-6873\t+1559735 6333\tUnited States\t733\tSoutheast 28th Street\tMorriston\tFL\t32668\tCondo 703\tI}JgmE#7'\t3:33 AM\tChlo\u00eb\tDemian\tAyilmaz\nInd...",
+      "stage1_text": "Individual_Type_id(1)\tMartinez-Turner\tshawgary@hotmail.com\t595-20-2805\t+1-299-959-0010x94396\tDawnport\t733\t64710 Scott Orchard Suite 359\t32668\tEdwards Ltd 703\tI}JgmE#7'\t3:33 AM\tGross-Valencialo\u00eb\tTheres...",
+      "candidate_text": "Individual_Type_id(1) shawgary@hotmail.com 595-20-2805 +1-299-959-0010x94396 Dawnport 733 64710 Scott Orchard Suite 359 32668 Edwards Ltd 703 I}JgmE#7' 3:33 AM Gross-Valencialo\u00eb Theresamian Ayilmaz In...",
+      "final_text": "Individual_Type_id(1) shawgary@hotmail.com 595-20-2805 +1-299-959-0010x94396 Dawnport 733 64710 Scott Orchard Suite 359 32668 Edwards Ltd 703 I}JgmE#7' 3:33 AM Gross-Valencialo\u00eb Theresamian Ayilmaz In...",
+      "composite_score": 0.9763,
+      "metrics": {
+        "semantic_similarity": 0.9884,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.9105,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": []
+    },
+    {
+      "sample_id": "ai4privacy_41281A",
+      "original_text": "Financial Aid Fillings for College Readiness Program Participants - DocX\n\nDate: 28/07/2024\nTime: 12:15 AM\n\nParticipant 1:\n- Sex: M\n- Username: HZ\n- Email: HZ@hotmail.com\n- Passport: 617033884\n- Teleph...",
+      "stage1_text": "Financial Aid Fillings for College Innovative maximized service-desk Program Participants - DocX\n\nDate: 28/07/2024\nTime: 12:15 AM\n\nParticipant 1:\n- Sex: M\n- Username: HZ\n- Email: opatel@hotmail.com\n- ...",
+      "candidate_text": "Financial Aid Fills for College Innovative Service Program Participants - DocX...",
+      "final_text": "Financial Aid Fills for College Innovative Service Program Participants - DocX...",
+      "composite_score": 0.7223,
+      "metrics": {
+        "semantic_similarity": 0.6849,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.3993,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "28/07/2024",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_51236",
+      "original_text": "\"23489, 576-ABC-123, Alderman, xwlkacrakee21@gmail.com, 342.13.0126, V3463556, 731115575, US, 498, Maricopa Highway, Ojai, CA, 93023-9549, Farmhouse 120, cffd:ba6:93e:e61a:76e3:e8c6:f47d:fae5, Mouayed...",
+      "stage1_text": "\"23489, 576-Melissa-123, Kevin, lindamelendez@hotmail.com, 342.13.0126, V3463556, +1-566-788-2634, South Melanieland, 498, North Joseph, Port Charlesshire, South Jason, 640-833-1739x36385, Fergusonsta...",
+      "candidate_text": "23489, 576-Melissa, Kevin, lindamelendez@hotmail.com, 342.13.0126, V3463556, +1-566-788-2634, South Melanieland, 498, North Joseph, Port Charlesshire, South Jason, 640-833-1739x36385, Fergusonstad 120...",
+      "final_text": "23489, 576-Melissa, Kevin, lindamelendez@hotmail.com, 342.13.0126, V3463556, +1-566-788-2634, South Melanieland, 498, North Joseph, Port Charlesshire, South Jason, 640-833-1739x36385, Fergusonstad 120...",
+      "composite_score": 0.9852,
+      "metrics": {
+        "semantic_similarity": 0.9756,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.987,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": []
+    },
+    {
+      "sample_id": "ai4privacy_45037A",
+      "original_text": "**Patient Consent Form**\n\n---\n\n**Patient Information:**\n- **Name:** Stefania-Ramona Klacar\n- **Date of Birth:** 09/07/1955\n- **Nationality:** GB\n- **Passport Number:** 210476274\n- **Address:** 816, Ke...",
+      "stage1_text": "**Patient Consent Form**\n\n---\n\n**Patient Information:**\n- **Name:** Port Adambergia-Megana Klacar\n- **Date of Birth:** 09/07/1955\n- **Nationality:** North Jasmine\n- **Passport Number:** 9382750997\n- *...",
+      "candidate_text": "Port Adambergia-Megana Klacar, a 68-year-old North Jasmine citizen, consents to a medical procedure on behalf of a patient with a standard address in New Jenniferside, ENG, DE22, and a secondary addre...",
+      "final_text": "Port Adambergia-Megana Klacar, a 68-year-old North Jasmine citizen, consents to a medical procedure on behalf of a patient with a standard address in New Jenniferside, ENG, DE22, and a secondary addre...",
+      "composite_score": 0.8323,
+      "metrics": {
+        "semantic_similarity": 0.7903,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.686,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "09/07/1955",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_49729",
+      "original_text": "\"Individuals:\nOther\tPr\t15essra\tL556097622532\t152211639\t+1 501.555.8798\tUS\t849\tSeward Highway\tMoose Pass\tAK\t99631\t112.134.87.11\tGalleguillos\nMale\tLord\t1974alush.gontar\t53013467\t481395620\t+21.408199150\t...",
+      "stage1_text": "\"Individuals:\nOther\tPr\t15essra\tL001-483-398-2622x4447\t(564)964-7154\t+1-793-971-2406x596\tRyanberg\t849\tMalikborough\tEdwardsfurt\tKellyfort\t001-535-464-6519.87.11\tSaunders, Johnson and Acostas\nClark, Sali...",
+      "candidate_text": "\"Individuals:\nOther\tPr\t15essra\tL001-483-398-2622x4447\t(564)964-7154\t+1-793-971-2406x596\tRyanberg\t849\tMalikborough\tEdwardsfurt\tKellyfort\t001-535-464-6519.87.11\tSaunders, Johnson and Acostas\nClark, Sali...",
+      "final_text": "\"Individuals:\nOther\tPr\t15essra\tL001-483-398-2622x4447\t(564)964-7154\t+1-793-971-2406x596\tRyanberg\t849\tMalikborough\tEdwardsfurt\tKellyfort\t001-535-464-6519.87.11\tSaunders, Johnson and Acostas\nClark, Sali...",
+      "composite_score": 1.0,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": []
+    },
+    {
+      "sample_id": "ai4privacy_46482A",
+      "original_text": "```yaml\n- Individuals:\n    - tdufgw83650@yahoo.com\n    - 839-608-5468\n    - UD37854YD\n    - MARUS7532009730\n    - 634199555\n    - 7855.049.4285\n    - United Kingdom\n    - 403\n    - Well Bottom\n    - N...",
+      "stage1_text": "```yaml\n- Individuals:\n    - paulcombs@yahoo.com\n    - (858)627-1091x04300\n    - UD37854YD\n    - HendersonfurtRUS588-492-4141\n    - +1-556-391-4630\n    - (717)699-0421x02027\n    - West David\n    - 403...",
+      "candidate_text": "paulcombs@yahoo.com, (858)627-1091x04300, UD37854YD, HendersonfurtRUS588-492-4141, +1-556-391-4630, (717)699-0421x02027, West David, 403, Jessicaville, West Lindsayview, ENG, CB8 7PJ, West Jennifershi...",
+      "final_text": "paulcombs@yahoo.com, (858)627-1091x04300, UD37854YD, HendersonfurtRUS588-492-4141, +1-556-391-4630, (717)699-0421x02027, West David, 403, Jessicaville, West Lindsayview, ENG, CB8 7PJ, West Jennifershi...",
+      "composite_score": 0.8483,
+      "metrics": {
+        "semantic_similarity": 0.7898,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.7671,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "09/03/2067",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    }
+  ],
+  "rejected_stage2_fallbacks": [
+    {
+      "sample_id": "ai4privacy_48624",
+      "original_text": "\"Student Travel Itinerary:\n- Travel date: 24th May 2003\n- Departure Time: 2 AM\n- Student 1:\n    - Name: Malu Wenhua Mballo\n    - Gender: M\n    - Title: King\n    - Username: malu.mballo\n    - Social Se...",
+      "stage1_text": "\"Student Travel Itinerary:\n- Travel date: 24th May 2003\n- Departure Time: 2 AM\n- Student 1:\n    - Name: Danielleu AngelJohnberg Mballo\n    - Gender: M\n    - Title: King\n    - Lake Joysidername: malu.m...",
+      "candidate_text": "Travel date: 24th May 2003, Departure Time: 2 AM, Student 1: Danielleu Mballo, Male, King, malu.mballo, SSN: 753.29.8684, DL: MBJMT.196001.PS.338: +1-763-679-4026, East Susan, 69, Curtisfurt, West Mel...",
+      "final_text": "\"Student Travel Itinerary:\n- Travel date: 24th May 2003\n- Departure Time: 2 AM\n- Student 1:\n    - Name: Danielleu AngelJohnberg Mballo\n    - Gender: M\n    - Title: King\n    - Lake Joysidername: malu.m...",
+      "composite_score": 0.512,
+      "metrics": {
+        "semantic_similarity": 0.7762,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.6195,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "24th May 2003",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_53135",
+      "original_text": "\"Behavioral Therapy Program Application \n------------------------------------------\nApplicant Information:\n- Username: zapora05\n- Email: zapora05@tutanota.com\n- ID Card Number: 490306124136\n- Driver's...",
+      "stage1_text": "\"Behavioral Multi-tiered attitude-oriented neural-net Application \n------------------------------------------\nApplicant Information:\n- Username: zapora05\n- Email: barbara10@yahoo.com\n- ID Card Number:...",
+      "candidate_text": "A user named Joselbine BrendadCoxbergun WilliamPort Brandonvillemi Lake Ernest submitted an application on April 15, 2043, with a username of zapora05 and an email address of barbara10@yahoo.com. The ...",
+      "final_text": "\"Behavioral Multi-tiered attitude-oriented neural-net Application \n------------------------------------------\nApplicant Information:\n- Username: zapora05\n- Email: barbara10@yahoo.com\n- ID Card Number:...",
+      "composite_score": 0.5373,
+      "metrics": {
+        "semantic_similarity": 0.6779,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.9918,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "15th April 2043",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_52448A",
+      "original_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    666-89-3996\n    42309241\n    754265061\n    US\n    296\n    McCartney Road\n    Kiskiminetas\n    PA\n    15613\n    Office 357\n    \\2.%oZpju...",
+      "stage1_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynside\n    Sellers, George and BurnsWest NatashaportBro...",
+      "candidate_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynside\n    Sellers, George and BurnsWest NatashaportBro...",
+      "final_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynside\n    Sellers, George and BurnsWest NatashaportBro...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "04/13/1977",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_43958",
+      "original_text": "\"Sr 21/12/1942 uwqavmiakj449 zuljbije.quensel1942@yahoo.com 246859868 080-4694.8946 United Kingdom 279 Locko Road Derby ENG DE21 Fort 98 29b2:1dba:83c2:a67d:db74:6b11:c4e:3aa9 Quensel Doychinova Woehr...",
+      "stage1_text": "\"Sr 21/12/1942 uwqavmiakj449 palmerjoshua@yahoo.com 838.729.9737x6311-4694.8946 Jenkinston 279 Valdez, Lucas and Brown ENG DE21 Fort 98 dc96:925e:ccf3:a171:56dc:8908:ba6c:34ab DanielJamesl Amandava Do...",
+      "candidate_text": "Senior 12/4/1982 Jenkinston 279 Valdez, Lucas and Brown ENG DE21 Fort 98 dc96:925e:ccf3:a171:56dc:8908:ba6c:34ab DanielJamesl Amandava Donaldl\u00e9 and 30/8/1988 and 15:31:47...",
+      "final_text": "\"Sr 21/12/1942 uwqavmiakj449 palmerjoshua@yahoo.com 838.729.9737x6311-4694.8946 Jenkinston 279 Valdez, Lucas and Brown ENG DE21 Fort 98 dc96:925e:ccf3:a171:56dc:8908:ba6c:34ab DanielJamesl Amandava Do...",
+      "composite_score": 0.7023,
+      "metrics": {
+        "semantic_similarity": 0.7821,
+        "qi_abstraction_score": 0.5,
+        "readability_score": 0.8064,
+        "privacy_reduction_score": 0.5
+      },
+      "qi_analysis": [
+        {
+          "text": "21/12/1942",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "30/08/1988",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_50690B",
+      "original_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Gappmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 691-05-6883\n- ID Card: 938456765634\n- D...",
+      "stage1_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 474-32-1236\n- ID Card: 581.808.0132x...",
+      "candidate_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 474-32-1236\n- ID Card: 581.808.0132x...",
+      "final_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 474-32-1236\n- ID Card: 581.808.0132x...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 09/27/1947",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        },
+        {
+          "text": "09/27/1947",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_48860A",
+      "original_text": "```yaml\nDischarge Summary:\n  Patient Information:\n    - F\n    - December/89\n    - 91193405270\n    - 492461882\n    - 062242890\n    - +11-604-431-7797\n    - US\n    - 337\n    - Road 112\n    - Pixley\n    ...",
+      "stage1_text": "```yaml\nDischarge Summary:\n  Patient Information:\n    - F\n    - December/89\n    - (886)592-3226x025\n    - 521-260-7337x543\n    - +1-636-454-1458x68501\n    - 001-340-819-6556\n    - West Bradley\n    - 3...",
+      "candidate_text": "A 52-year-old male patient from West Bradley, 337 Road 112, Ryanxley, discharged on 28th July 2077, responded well to behavioral therapy sessions....",
+      "final_text": "```yaml\nDischarge Summary:\n  Patient Information:\n    - F\n    - December/89\n    - (886)592-3226x025\n    - 521-260-7337x543\n    - +1-636-454-1458x68501\n    - 001-340-819-6556\n    - West Bradley\n    - 3...",
+      "composite_score": 0.3985,
+      "metrics": {
+        "semantic_similarity": 0.6041,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.4822,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "28th July 2077",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_53416",
+      "original_text": "TEXTID_First  | \nMstr  | \nNovember 11th, 1958  | \ntsutis11  | \ntsutis11@aol.com  | \n158115531903172  | \n+5 00.368.5906  | \nFR  | \n537  | \nRoute du Rhin  | \nErstein  | \nGrand Est  | \n67150  | \nBox 512 ...",
+      "stage1_text": "TEXTID_Orr, Gilbert and Turner  | \nMstr  | \nNovember 11th, 1958  | \ntsutis11  | \ntorresjason@hotmail.com  | \n001-495-377-7387  | \n989-351-3433x2003  | \nFR  | \n537  | \nPerry-Soto  | \nELake Heather  | \n...",
+      "candidate_text": "TEXTID_Orr, Gilbert and Turner  | \nMstr  | \nNovember 11th, 1958  | \ntsutis11  | \ntorresjason@hotmail.com  | \n001-495-377-7387  | \n989-351-3433x2003  | \nFR  | \n537  | \nPerry-Soto  | \nELake Heather  | \n...",
+      "final_text": "TEXTID_Orr, Gilbert and Turner  | \nMstr  | \nNovember 11th, 1958  | \ntsutis11  | \ntorresjason@hotmail.com  | \n001-495-377-7387  | \n989-351-3433x2003  | \nFR  | \n537  | \nPerry-Soto  | \nELake Heather  | \n...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "November 11th, 1958",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        },
+        {
+          "text": "15/02/1989",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_51663B",
+      "original_text": "Address: Unit 712\n  - Password: Wz1t\"m~gw\n\n**Communication Record 2**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: Sel\n  - Name: Davey Lomel\n  - Gender: Feminine\n  - Date of Birth: 22/08/1937\n  - ...",
+      "stage1_text": "Address: Unit 712\n  - Password: nGi*6BgN\n\n**Communication Record 2**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: Sel\n  - Name: Don Tucker MD\n  - Gender: Feminine\n  - Date of Birth: 22/08/1937\n  -...",
+      "candidate_text": "Address: Unit 712\n  - Password: nGi*6BgN\n\n**Communication Record 2**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: Sel\n  - Name: Don Tucker MD\n  - Gender: Feminine\n  - Date of Birth: 22/08/1937\n  -...",
+      "final_text": "Address: Unit 712\n  - Password: nGi*6BgN\n\n**Communication Record 2**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: Sel\n  - Name: Don Tucker MD\n  - Gender: Feminine\n  - Date of Birth: 22/08/1937\n  -...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 22/08/1937",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        },
+        {
+          "text": "22/08/1937",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_51663C",
+      "original_text": "AiS;\n\n**Communication Record 3**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: H\n  - Name: Megan Kittenbaumer Laassili Clemenceau\n  - Gender: Female\n  - Date of Birth: 08/06/1985\n  - Username: 08no...",
+      "stage1_text": "AiS;\n\n**Communication Record 3**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: H\n  - Name: Bradley Smither AmberMrs. Marie Harrington DDS\n  - Gender: Female\n  - Date of Birth: 08/06/1985\n  - Userna...",
+      "candidate_text": "A communication record from 2030 involving a female patient named Bradley Smither AmberMrs. Marie Harrington DDS, born on August 6, 1985, with a username of 08norberta.laassili, email jamessmith@gmail...",
+      "final_text": "AiS;\n\n**Communication Record 3**\n- Date: 2030-02-14T00:00:00\n- Sender:\n  - Title: H\n  - Name: Bradley Smither AmberMrs. Marie Harrington DDS\n  - Gender: Female\n  - Date of Birth: 08/06/1985\n  - Userna...",
+      "composite_score": 0.6792,
+      "metrics": {
+        "semantic_similarity": 0.7906,
+        "qi_abstraction_score": 0.335,
+        "readability_score": 0.9171,
+        "privacy_reduction_score": 0.335
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 08/06/1985",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 0.33,
+          "status": "partial"
+        },
+        {
+          "text": "08/06/1985",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_49434A",
+      "original_text": "Clinical Trial Records for May 19, 1984\n\n---\nParticipant 1:\n- Female\n- Countess\n- LD@hotmail.com\n- I3026167\n- 003 34 441 9751\n- United States\n- 610\n- Dogwood Court\n- Norwood\n- NJ\n- 7648\n- 234.223.19.1...",
+      "stage1_text": "Clinical Trial Records for May 19, 1984\n\n---\nParticipant 1:\n- Female\n- Countess\n- cynthia72@yahoo.com\n- I3026167\n- (628)949-8776x94531\n- Port Steven\n- 610\n- Rogersfort\n- Hunterborough\n- Laurenmouth\n- ...",
+      "candidate_text": "Clinical Trial Records for May 19, 1984\n\n---\nParticipant 1:\n- Female\n- Countess\n- cynthia72@yahoo.com\n- I3026167\n- (628)949-8776x94531\n- Port Steven\n- 610\n- Rogersfort\n- Hunterborough\n- Laurenmouth\n- ...",
+      "final_text": "Clinical Trial Records for May 19, 1984\n\n---\nParticipant 1:\n- Female\n- Countess\n- cynthia72@yahoo.com\n- I3026167\n- (628)949-8776x94531\n- Port Steven\n- 610\n- Rogersfort\n- Hunterborough\n- Laurenmouth\n- ...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "May 19, 1984",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        },
+        {
+          "text": "$0",
+          "type": "MONEY",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    }
+  ],
+  "partial_qi_mitigation_examples": [
+    {
+      "sample_id": "ai4privacy_51663C",
+      "qi": {
+        "text": "Date of Birth: 08/06/1985",
+        "type": "DEMOGRAPHIC",
+        "initial_risk": 1.0,
+        "residual_risk": 0.33,
+        "status": "partial"
+      },
+      "candidate": "A communication record from 2030 involving a female patient named Bradley Smither AmberMrs. Marie Harrington DDS, born on August 6, 1985, with a usern"
+    },
+    {
+      "sample_id": "ai4privacy_53472A",
+      "qi": {
+        "text": "25/11/1997",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 0.67,
+        "status": "partial"
+      },
+      "candidate": "The webinar session with the participant began at 4:27 PM on November 25, 1997. The participant's details include John Patrick Jennifer Floresha Thoma"
+    },
+    {
+      "sample_id": "ai4privacy_47355",
+      "qi": {
+        "text": "5th August 2044",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 0.25,
+        "status": "partial"
+      },
+      "candidate": "a user with username vzhzhvsfb73, email davidryan@gmail.com, social number 375-68-8222, id card 724-374-5171x236, passport (904)281-7549x6513, telepho"
+    },
+    {
+      "sample_id": "ai4privacy_48861A",
+      "qi": {
+        "text": "21/02/2003",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 0.67,
+        "status": "partial"
+      },
+      "candidate": "A 15-year-old named Tyler Kelly Owennen, born on February 21, 2003, attends school at 429 Millerburgh NV. His contact information includes a username "
+    },
+    {
+      "sample_id": "ai4privacy_46308A",
+      "qi": {
+        "text": "Date of Birth: 11/28/1974",
+        "type": "DEMOGRAPHIC",
+        "initial_risk": 1.0,
+        "residual_risk": 0.33,
+        "status": "partial"
+      },
+      "candidate": "A male student named CCassiei, born on November 28, 1974, with the ID card number (485)965-4310, is learning about a networked non-volatile alliance a"
+    }
+  ],
+  "exposed_qi_examples": [
+    {
+      "sample_id": "ai4privacy_48624",
+      "qi": {
+        "text": "24th May 2003",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 1.0,
+        "status": "exposed"
+      },
+      "candidate": "Travel date: 24th May 2003, Departure Time: 2 AM, Student 1: Danielleu Mballo, Male, King, malu.mballo, SSN: 753.29.8684, DL: MBJMT.196001.PS.338: +1-"
+    },
+    {
+      "sample_id": "ai4privacy_53135",
+      "qi": {
+        "text": "15th April 2043",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 1.0,
+        "status": "exposed"
+      },
+      "candidate": "A user named Joselbine BrendadCoxbergun WilliamPort Brandonvillemi Lake Ernest submitted an application on April 15, 2043, with a username of zapora05"
+    },
+    {
+      "sample_id": "ai4privacy_52448A",
+      "qi": {
+        "text": "04/13/1977",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 1.0,
+        "status": "exposed"
+      },
+      "candidate": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynsid"
+    },
+    {
+      "sample_id": "ai4privacy_43958",
+      "qi": {
+        "text": "30/08/1988",
+        "type": "DATE",
+        "initial_risk": 1.0,
+        "residual_risk": 1.0,
+        "status": "exposed"
+      },
+      "candidate": "Senior 12/4/1982 Jenkinston 279 Valdez, Lucas and Brown ENG DE21 Fort 98 dc96:925e:ccf3:a171:56dc:8908:ba6c:34ab DanielJamesl Amandava Donaldl\u00e9 and 30"
+    },
+    {
+      "sample_id": "ai4privacy_50690B",
+      "qi": {
+        "text": "Date of Birth: 09/27/1947",
+        "type": "DEMOGRAPHIC",
+        "initial_risk": 1.0,
+        "residual_risk": 1.0,
+        "status": "exposed"
+      },
+      "candidate": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Sec"
+    }
+  ],
+  "low_semantic_similarity_examples": [
+    {
+      "sample_id": "ai4privacy_53472A",
+      "original_text": "In the Learning Management System Discussions regarding Dialectical Behavior Therapy (DBT), the following conversation took place:\n\nParticipant A:\n- The webinar session with the participant started at...",
+      "stage1_text": "In the Public-key mission-critical hardware Discussions regarding Managed neutral task-forcecticQuality-focused homogeneous knowledgebase (Inverse content-based standardization), the following convers...",
+      "candidate_text": "The webinar session with the participant began at 4:27 PM on November 25, 1997. The participant's details include John Patrick Jennifer Floresha Thomasyran Robint Lessi, who is associated with ymcneil...",
+      "final_text": "In the Public-key mission-critical hardware Discussions regarding Managed neutral task-forcecticQuality-focused homogeneous knowledgebase (Inverse content-based standardization), the following convers...",
+      "composite_score": 0.4783,
+      "metrics": {
+        "semantic_similarity": 0.4453,
+        "qi_abstraction_score": 0.33,
+        "readability_score": 0.7832,
+        "privacy_reduction_score": 0.33
+      },
+      "qi_analysis": [
+        {
+          "text": "25/11/1997",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.67,
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_47355",
+      "original_text": "{\"record\": {\"user\": {\"username\": \"vzhzhvsfb73\", \"email\": \"SSS17@hotmail.com\", \"social_number\": \"080-96-0273\", \"id_card\": \"285627500\", \"passport\": \"544457166\", \"telephone\": \"001 151 436 0738\", \"buildin...",
+      "stage1_text": "{\"record\": {\"user\": {\"username\": \"vzhzhvsfb73\", \"email\": \"davidryan@gmail.com\", \"social_number\": \"375-68-8222\", \"id_card\": \"724-374-5171x236\", \"passport\": \"(904)281-7549x6513\", \"telephone\": \"+1-285-69...",
+      "candidate_text": "a user with username vzhzhvsfb73, email davidryan@gmail.com, social number 375-68-8222, id card 724-374-5171x236, passport (904)281-7549x6513, telephone +1-285-693-1746x120, living in South Shawn, Mat...",
+      "final_text": "{\"record\": {\"user\": {\"username\": \"vzhzhvsfb73\", \"email\": \"davidryan@gmail.com\", \"social_number\": \"375-68-8222\", \"id_card\": \"724-374-5171x236\", \"passport\": \"(904)281-7549x6513\", \"telephone\": \"+1-285-69...",
+      "composite_score": 0.6096,
+      "metrics": {
+        "semantic_similarity": 0.4923,
+        "qi_abstraction_score": 0.75,
+        "readability_score": 0.6924,
+        "privacy_reduction_score": 0.75
+      },
+      "qi_analysis": [
+        {
+          "text": "5th August 2044",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.25,
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_53519B",
+      "original_text": ": 986 Harrigal Road Holliday TX 76366\n\nParticipant 2:\n- Username: rslamlsod26546\n- Name: Ma\u00ebline Balmer\n- Gender: Prefer not to disclose\n- Date of Birth: 07/16/1988\n- Social Security Number: 248 19 28...",
+      "stage1_text": ": 986 SampsonstadLake Michaelstad 76366\n\nParticipant 2:\n- South Joshuavillername: rslamlsod26546\n- Name: StacyMadisonDaniel Fowler\n- Gender: Prefer not to disclose\n- Date of Birth: 07/16/1988\n- Social...",
+      "candidate_text": "Michaelstad 76366...",
+      "final_text": ": 986 SampsonstadLake Michaelstad 76366\n\nParticipant 2:\n- South Joshuavillername: rslamlsod26546\n- Name: StacyMadisonDaniel Fowler\n- Gender: Prefer not to disclose\n- Date of Birth: 07/16/1988\n- Social...",
+      "composite_score": 0.5266,
+      "metrics": {
+        "semantic_similarity": 0.3235,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.3242,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 07/16/1988",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "07/16/1988",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_44951",
+      "original_text": "{\"proposal\": [{\"proposal_id\": \"1975\", \"username\": \"1975marwo\", \"email\": \"regnietlispach@protonmail.com\", \"passport\": \"016836408\", \"social_number\": \"662-196-7047\", \"tel\": \"+3174283 0525\", \"country\": \"G...",
+      "stage1_text": "{\"proposal\": [{\"proposal_id\": \"1975\", \"username\": \"1975marwo\", \"email\": \"gperry@yahoo.com\", \"passport\": \"465-245-2711x11615\", \"social_number\": \"001-688-651-6560\", \"tel\": \"(319)683-2731x585\", \"country\"...",
+      "candidate_text": "A wire transfer of $45,000 was made in early 2024, and a service charge of $25 was applied. The senior financial advisory staff provided a standard service. The individual was born in their early 40s,...",
+      "final_text": "{\"proposal\": [{\"proposal_id\": \"1975\", \"username\": \"1975marwo\", \"email\": \"gperry@yahoo.com\", \"passport\": \"465-245-2711x11615\", \"social_number\": \"001-688-651-6560\", \"tel\": \"(319)683-2731x585\", \"country\"...",
+      "composite_score": 0.1499,
+      "metrics": {
+        "semantic_similarity": 0.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.7497,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "19/01/1998",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_52610A",
+      "original_text": "**Support Ticket Conversation - Ticket#1234567**\n\n**Date:** 01/22/2050\n**Time:** 12:24 PM\n\n**Ticket Overview:**\nThis conversation pertains to resolving a social influence and persuasion issue.\n\n**Cust...",
+      "stage1_text": "**Support Ticket Conversation - Ticket#1234567**\n\n**Date:** 01/22/2050\n**Time:** 12:24 PM\n\n**Ticket Overview:**\nThis conversation pertains to resolving a social influence and persuasion issue.\n\n**Cust...",
+      "candidate_text": "This conversation pertains to resolving a social influence and persuasion issue....",
+      "final_text": "**Support Ticket Conversation - Ticket#1234567**\n\n**Date:** 01/22/2050\n**Time:** 12:24 PM\n\n**Ticket Overview:**\nThis conversation pertains to resolving a social influence and persuasion issue.\n\n**Cust...",
+      "composite_score": 0.5718,
+      "metrics": {
+        "semantic_similarity": 0.383,
+        "qi_abstraction_score": 1.0,
+        "readability_score": 0.4016,
+        "privacy_reduction_score": 1.0
+      },
+      "qi_analysis": [
+        {
+          "text": "01/22/2050",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "Date of Birth: 07/19/1956",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        },
+        {
+          "text": "07/19/1956",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 0.0,
+          "status": "mitigated"
+        }
+      ]
+    }
+  ],
+  "qi_floor_rejection_examples": [
+    {
+      "sample_id": "ai4privacy_48624",
+      "original_text": "\"Student Travel Itinerary:\n- Travel date: 24th May 2003\n- Departure Time: 2 AM\n- Student 1:\n    - Name: Malu Wenhua Mballo\n    - Gender: M\n    - Title: King\n    - Username: malu.mballo\n    - Social Se...",
+      "stage1_text": "\"Student Travel Itinerary:\n- Travel date: 24th May 2003\n- Departure Time: 2 AM\n- Student 1:\n    - Name: Danielleu AngelJohnberg Mballo\n    - Gender: M\n    - Title: King\n    - Lake Joysidername: malu.m...",
+      "candidate_text": "Travel date: 24th May 2003, Departure Time: 2 AM, Student 1: Danielleu Mballo, Male, King, malu.mballo, SSN: 753.29.8684, DL: MBJMT.196001.PS.338: +1-763-679-4026, East Susan, 69, Curtisfurt, West Mel...",
+      "final_text": "\"Student Travel Itinerary:\n- Travel date: 24th May 2003\n- Departure Time: 2 AM\n- Student 1:\n    - Name: Danielleu AngelJohnberg Mballo\n    - Gender: M\n    - Title: King\n    - Lake Joysidername: malu.m...",
+      "composite_score": 0.512,
+      "metrics": {
+        "semantic_similarity": 0.7762,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.6195,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "24th May 2003",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_53135",
+      "original_text": "\"Behavioral Therapy Program Application \n------------------------------------------\nApplicant Information:\n- Username: zapora05\n- Email: zapora05@tutanota.com\n- ID Card Number: 490306124136\n- Driver's...",
+      "stage1_text": "\"Behavioral Multi-tiered attitude-oriented neural-net Application \n------------------------------------------\nApplicant Information:\n- Username: zapora05\n- Email: barbara10@yahoo.com\n- ID Card Number:...",
+      "candidate_text": "A user named Joselbine BrendadCoxbergun WilliamPort Brandonvillemi Lake Ernest submitted an application on April 15, 2043, with a username of zapora05 and an email address of barbara10@yahoo.com. The ...",
+      "final_text": "\"Behavioral Multi-tiered attitude-oriented neural-net Application \n------------------------------------------\nApplicant Information:\n- Username: zapora05\n- Email: barbara10@yahoo.com\n- ID Card Number:...",
+      "composite_score": 0.5373,
+      "metrics": {
+        "semantic_similarity": 0.6779,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.9918,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "15th April 2043",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_52448A",
+      "original_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    666-89-3996\n    42309241\n    754265061\n    US\n    296\n    McCartney Road\n    Kiskiminetas\n    PA\n    15613\n    Office 357\n    \\2.%oZpju...",
+      "stage1_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynside\n    Sellers, George and BurnsWest NatashaportBro...",
+      "candidate_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynside\n    Sellers, George and BurnsWest NatashaportBro...",
+      "final_text": "Individuals:\n```\n- Selectwoman\n    04/13/1977\n    1977MSCv13\n    697-55-9772\n    366-697-8480\n    001-551-446-2704x82814\n    US\n    296\n    Kathrynside\n    Sellers, George and BurnsWest NatashaportBro...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "04/13/1977",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_50690B",
+      "original_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Gappmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 691-05-6883\n- ID Card: 938456765634\n- D...",
+      "stage1_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 474-32-1236\n- ID Card: 581.808.0132x...",
+      "candidate_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 474-32-1236\n- ID Card: 581.808.0132x...",
+      "final_text": "c517:5119:3b25\n- Time: 23:58\n- Given Name: Rukmon\n- Last Name1: Xasan\n- Last Name2: Isaiahpmaier\n\n2. Party B:\n- Date of Birth: 09/27/1947\n- Social Security Number: 474-32-1236\n- ID Card: 581.808.0132x...",
+      "composite_score": 0.7,
+      "metrics": {
+        "semantic_similarity": 1.0,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 1.0,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "Date of Birth: 09/27/1947",
+          "type": "DEMOGRAPHIC",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        },
+        {
+          "text": "09/27/1947",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    },
+    {
+      "sample_id": "ai4privacy_48860A",
+      "original_text": "```yaml\nDischarge Summary:\n  Patient Information:\n    - F\n    - December/89\n    - 91193405270\n    - 492461882\n    - 062242890\n    - +11-604-431-7797\n    - US\n    - 337\n    - Road 112\n    - Pixley\n    ...",
+      "stage1_text": "```yaml\nDischarge Summary:\n  Patient Information:\n    - F\n    - December/89\n    - (886)592-3226x025\n    - 521-260-7337x543\n    - +1-636-454-1458x68501\n    - 001-340-819-6556\n    - West Bradley\n    - 3...",
+      "candidate_text": "A 52-year-old male patient from West Bradley, 337 Road 112, Ryanxley, discharged on 28th July 2077, responded well to behavioral therapy sessions....",
+      "final_text": "```yaml\nDischarge Summary:\n  Patient Information:\n    - F\n    - December/89\n    - (886)592-3226x025\n    - 521-260-7337x543\n    - +1-636-454-1458x68501\n    - 001-340-819-6556\n    - West Bradley\n    - 3...",
+      "composite_score": 0.3985,
+      "metrics": {
+        "semantic_similarity": 0.6041,
+        "qi_abstraction_score": 0.0,
+        "readability_score": 0.4822,
+        "privacy_reduction_score": 0.0
+      },
+      "qi_analysis": [
+        {
+          "text": "28th July 2077",
+          "type": "DATE",
+          "initial_risk": 1.0,
+          "residual_risk": 1.0,
+          "status": "exposed"
+        }
+      ]
+    }
+  ]
+}

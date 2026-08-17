@@ -90,6 +90,114 @@ def compute_privacy_metrics(
     }
 
 
+def compute_ground_truth_pii_leakage(
+    sanitized_texts: List[str],
+    ground_truth_entities: List[List[Dict[str, Any]]],
+) -> Dict[str, float]:
+    """
+    Compute residual ground-truth PII leakage rate directly against original annotations.
+
+    Leakage Rate = (Remaining Ground-Truth PII Spans in Sanitized Text) / (Total Ground-Truth PII Spans)
+    Removal Rate = 1.0 - Leakage Rate
+    """
+    total_gt_entities = 0
+    leaked_gt_entities = 0
+
+    for sanit_text, truths in zip(sanitized_texts, ground_truth_entities):
+        sanit_lower = sanit_text.lower()
+        for truth in truths:
+            val = truth.get("entity", truth.get("value", truth.get("text", ""))).strip().lower()
+            if not val or len(val) < 2:
+                continue
+            total_gt_entities += 1
+            # Check if original raw ground-truth PII is still present in sanitized output
+            if val in sanit_lower:
+                leaked_gt_entities += 1
+
+    leakage_rate = leaked_gt_entities / max(total_gt_entities, 1)
+    removal_rate = 1.0 - leakage_rate
+
+    return {
+        "pii_leakage_rate": round(float(leakage_rate), 4),
+        "pii_removal_rate": round(float(removal_rate), 4),
+        "total_gt_entities": total_gt_entities,
+        "leaked_gt_entities": leaked_gt_entities,
+    }
+
+
+def compute_per_entity_pii_metrics(
+    predictions: List[List[Dict[str, Any]]],
+    ground_truths: List[List[Dict[str, Any]]],
+    match_mode: str = "relaxed",
+) -> List[Dict[str, Any]]:
+    """
+    Compute Precision, Recall, and F1 broken down per entity type.
+    """
+    entity_stats: Dict[str, Dict[str, int]] = {}
+
+    for preds, truths in zip(predictions, ground_truths):
+        matched_truth_indices = set()
+
+        for pred in preds:
+            p_start, p_end = pred.get("start", 0), pred.get("end", 0)
+            p_val = pred.get("entity_value", pred.get("text", "")).strip().lower()
+            p_type = pred.get("entity_type", "MISC").upper()
+
+            if p_type not in entity_stats:
+                entity_stats[p_type] = {"tp": 0, "fp": 0, "fn": 0, "support": 0}
+
+            found_match = False
+            for t_idx, truth in enumerate(truths):
+                if t_idx in matched_truth_indices:
+                    continue
+
+                t_start, t_end = truth.get("start", 0), truth.get("end", 0)
+                t_val = truth.get("entity", truth.get("value", truth.get("text", ""))).strip().lower()
+                t_type = truth.get("type", truth.get("label", "MISC")).upper()
+
+                if match_mode == "exact":
+                    is_match = (p_start == t_start and p_end == t_end) or (p_val == t_val)
+                else:
+                    overlap = max(0, min(p_end, t_end) - max(p_start, t_start))
+                    is_match = overlap > 0 or (p_val in t_val) or (t_val in p_val)
+
+                if is_match:
+                    found_match = True
+                    matched_truth_indices.add(t_idx)
+                    break
+
+            if found_match:
+                entity_stats[p_type]["tp"] += 1
+            else:
+                entity_stats[p_type]["fp"] += 1
+
+        for t_idx, truth in enumerate(truths):
+            t_type = truth.get("type", truth.get("label", "MISC")).upper()
+            if t_type not in entity_stats:
+                entity_stats[t_type] = {"tp": 0, "fp": 0, "fn": 0, "support": 0}
+            entity_stats[t_type]["support"] += 1
+            if t_idx not in matched_truth_indices:
+                entity_stats[t_type]["fn"] += 1
+
+    rows = []
+    for etype, s in sorted(entity_stats.items()):
+        tp, fp, fn, supp = s["tp"], s["fp"], s["fn"], s["support"]
+        prec = tp / (tp + fp) if (tp + fp) > 0 else 1.0
+        rec = tp / (tp + fn) if (tp + fn) > 0 else 1.0
+        f1 = (2 * prec * rec) / (prec + rec) if (prec + rec) > 0 else 0.0
+        rows.append({
+            "entity_type": etype,
+            "precision": round(prec, 4),
+            "recall": round(rec, 4),
+            "f1": round(f1, 4),
+            "true_positives": tp,
+            "false_positives": fp,
+            "false_negatives": fn,
+            "support": supp,
+        })
+    return rows
+
+
 def _internal_lcs_rouge_l(ref: str, hyp: str) -> float:
     """Internal Longest Common Subsequence calculator for ROUGE-L fallback."""
     ref_tokens = re.findall(r"\w+", ref.lower())
